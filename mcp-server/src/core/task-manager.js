@@ -1,12 +1,42 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { 
+    TaskNotFoundError,
+    ProjectNotFoundError,
+    FileSystemError,
+    TaskStateError,
+    TaskValidationError,
+    logError
+} from '../utils/errors.js';
+import { taskCache } from '../utils/cache.js';
+import { debouncer } from '../utils/debounce.js';
+import { logger } from '../utils/logger.js';
+import { 
+    isValidProjectId, 
+    isValidTaskId, 
+    getProjectDirPath, 
+    getTasksFilePath 
+} from '../utils/security.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Core task management functionality
+ * Core task management functionality for the Windsurf Task Master system.
+ * 
+ * The TaskManager is responsible for managing tasks across different projects,
+ * providing methods for creating, updating, and retrieving tasks. It implements
+ * performance optimizations including caching, debouncing, and task indexing.
+ * 
+ * @class
+ * @example
+ * const taskManager = new TaskManager();
+ * await taskManager.init('my-project');
+ * const task = await taskManager.createTask({
+ *   title: 'Implement feature',
+ *   description: 'Add new functionality'
+ * }, 'my-project');
  */
 export class TaskManager {
     constructor() {
@@ -16,25 +46,61 @@ export class TaskManager {
         this.initialized = false;
         this.windsurfTasks = new Map(); // Track tasks assigned to Windsurf
         this.currentProject = null; // Current active project
+        
+        // Task indices for faster lookups
+        this.taskIndices = new Map(); // Map of project IDs to task indices
+        
+        // Save debounce delay
+        this.saveDelay = 1000; // 1 second delay for debounced saves
     }
 
     /**
-     * Initialize the task manager by loading existing tasks
+     * Initialize the task manager by loading existing tasks for a specific project.
+     * This method ensures the project directory exists, loads tasks from the file system,
+     * and builds indices for efficient task lookup. It also implements caching to avoid
+     * unnecessary file system reads.
+     * 
      * @param {string} projectId - Required project ID to load tasks for a specific project
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @throws {FileSystemError} If there's an error accessing the file system
+     * @returns {Promise<void>}
      */
     async init(projectId) {
         if (!projectId) {
-            throw new Error('Project ID is required to initialize task manager');
+            throw new ProjectNotFoundError('Project ID is required to initialize task manager');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
         }
 
         try {
+            // Check cache first
+            const cachedTasks = taskCache.get(`tasks_${projectId}`);
+            if (cachedTasks) {
+                logger.debug('Using cached tasks', { projectId });
+                this.projectTasks.set(projectId, cachedTasks);
+                return;
+            }
+
             // Ensure the base tasks directory exists
             await fs.mkdir(this.baseTasksDir, { recursive: true });
             
             // Set as the current project
             this.currentProject = projectId;
-            const projectDir = path.join(this.baseTasksDir, projectId);
-            const projectTasksPath = path.join(projectDir, 'tasks.json');
+            
+            // Get sanitized paths to prevent path traversal attacks
+            const projectDir = getProjectDirPath(this.baseTasksDir, projectId);
+            if (!projectDir) {
+                throw new FileSystemError(
+                    `Invalid project directory path for project ${projectId}`,
+                    'init',
+                    this.baseTasksDir
+                );
+            }
+            
+            const projectTasksPath = getTasksFilePath(projectDir, 'tasks.json');
             
             // Ensure the project directory exists
             await fs.mkdir(projectDir, { recursive: true });
@@ -52,6 +118,12 @@ export class TaskManager {
                 const data = await fs.readFile(projectTasksPath, 'utf-8');
                 const tasks = JSON.parse(data);
                 this.projectTasks.set(projectId, tasks);
+                
+                // Cache the tasks
+                taskCache.set(`tasks_${projectId}`, tasks);
+                
+                // Build indices
+                this.buildTaskIndices(projectId);
             } catch (error) {
                 // If file doesn't exist, create it with empty tasks
                 this.projectTasks.set(projectId, []);
@@ -60,27 +132,60 @@ export class TaskManager {
 
             this.initialized = true;
         } catch (error) {
-            console.error(`Failed to initialize TaskManager for project ${projectId}:`, error);
-            throw error;
+            const fsError = new FileSystemError(
+                `Failed to initialize TaskManager for project ${projectId}`,
+                'init',
+                this.baseTasksDir,
+                error
+            );
+            logError(fsError);
+            throw fsError;
         }
     }
 
     /**
-     * Save tasks to file
+     * Save tasks to file for a specific project.
+     * This method implements debouncing to optimize file system writes by
+     * grouping multiple write operations within a short time window.
+     * 
      * @param {string} projectId - Required project ID to save tasks for a specific project
+     * @throws {ProjectNotFoundError} If project ID is not provided
+     * @throws {FileSystemError} If there's an error writing to the file system
+     * @returns {Promise<void>}
      */
     async saveTasks(projectId) {
         if (!projectId) {
-            throw new Error('Project ID is required to save tasks');
+            throw new ProjectNotFoundError('Project ID is required to save tasks');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
         }
         
         try {
-            // Get the project-specific tasks file path
             let tasksPath = this.projectsMap.get(projectId);
+            
+            // If path not found, create it
             if (!tasksPath) {
-                // If the project ID is not in the map, create a new project directory and tasks file
-                const projectDir = path.join(this.baseTasksDir, projectId);
-                tasksPath = path.join(projectDir, 'tasks.json');
+                // Get sanitized paths to prevent path traversal attacks
+                const projectDir = getProjectDirPath(this.baseTasksDir, projectId);
+                if (!projectDir) {
+                    throw new FileSystemError(
+                        `Invalid project directory path for project ${projectId}`,
+                        'saveTasks',
+                        this.baseTasksDir
+                    );
+                }
+                
+                tasksPath = getTasksFilePath(projectDir, 'tasks.json');
+                if (!tasksPath) {
+                    throw new FileSystemError(
+                        `Invalid tasks file path for project ${projectId}`,
+                        'saveTasks',
+                        projectDir
+                    );
+                }
                 
                 // Ensure the project directory exists
                 await fs.mkdir(projectDir, { recursive: true });
@@ -92,12 +197,30 @@ export class TaskManager {
             // Get the tasks for this project
             const tasks = this.projectTasks.get(projectId) || [];
             
-            // Save the tasks to the project-specific file
-            await fs.writeFile(tasksPath, JSON.stringify(tasks, null, 2));
-            console.error(`Saved tasks for project ${projectId} to ${tasksPath}`);
+            // Update cache
+            taskCache.set(`tasks_${projectId}`, tasks);
+            
+            // Debounce the save operation
+            await debouncer.debounce(
+                `save_${projectId}`,
+                async () => {
+                    await fs.writeFile(tasksPath, JSON.stringify(tasks, null, 2));
+                    logger.debug(`Saved tasks for project ${projectId}`, { 
+                        path: tasksPath,
+                        taskCount: tasks.length 
+                    });
+                },
+                this.saveDelay
+            );
         } catch (error) {
-            console.error(`Failed to save tasks for project ${projectId}:`, error);
-            throw error;
+            const fsError = new FileSystemError(
+                `Failed to save tasks for project ${projectId}`,
+                'save',
+                tasksPath,
+                error
+            );
+            logError(fsError);
+            throw fsError;
         }
     }
 
@@ -106,7 +229,7 @@ export class TaskManager {
      * @param {Object} taskData - Task data
      * @param {string} projectId - Required project ID to create the task for a specific project
      */
-    async createTask({ title, description, priority = 'medium', dependencies = [] }, projectId) {
+    async createTask(taskData, projectId) {
         if (!projectId) {
             throw new Error('Project ID is required to create a task');
         }
@@ -114,29 +237,29 @@ export class TaskManager {
         // Initialize for the project
         await this.init(projectId);
         
-        // Get the current tasks for this project
-        const projectTasks = this.projectTasks.get(projectId) || [];
+        // Get the tasks for this project
+        const tasks = this.projectTasks.get(projectId) || [];
         
-        // Create the new task
+        // Create new task
         const newTask = {
-            id: projectTasks.length + 1,
-            title,
-            description,
-            status: 'pending',
-            priority,
-            dependencies,
-            projectId,
+            ...taskData,
+            id: tasks.length + 1,
+            status: taskData.status || 'pending',
+            progress: 0,
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
+            dependencies: taskData.dependencies || [],
+            priority: taskData.priority || 'medium',
+            projectId
         };
-
-        // Add the task to the project's tasks
-        projectTasks.push(newTask);
-        this.projectTasks.set(projectId, projectTasks);
         
-        // Save the tasks to the project-specific file
+        // Add to tasks list
+        tasks.push(newTask);
+        this.projectTasks.set(projectId, tasks);
+        
+        // Save tasks
         await this.saveTasks(projectId);
-
+        
         return newTask;
     }
 
@@ -161,10 +284,27 @@ export class TaskManager {
      * @param {number} id - Task ID
      * @param {Object} updates - Task updates
      * @param {string} projectId - Required project ID to update a task for a specific project
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @throws {TaskNotFoundError} If task is not found
+     * @throws {TaskValidationError} If updates are invalid
+     * @returns {Promise<Object>} The updated task
      */
     async updateTask(id, updates, projectId) {
         if (!projectId) {
-            throw new Error('Project ID is required to update a task');
+            throw new ProjectNotFoundError('Project ID is required to update a task');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
+        }
+        
+        // Validate task ID
+        if (!isValidTaskId(id)) {
+            throw new TaskValidationError(`Invalid task ID: ${id}`, {
+                field: 'id',
+                value: id
+            });
         }
         
         // Initialize for the project
@@ -213,29 +353,14 @@ export class TaskManager {
     }
 
     /**
-     * Get a task by ID
-     * @param {number} id - Task ID
-     * @param {string} projectId - Required project ID to get a task from a specific project
-     */
-    async getTask(id, projectId) {
-        if (!projectId) {
-            throw new Error('Project ID is required to get a task');
-        }
-        
-        // Initialize for the project
-        await this.init(projectId);
-        
-        // Get the tasks for this project
-        const projectTasks = this.projectTasks.get(projectId) || [];
-        
-        // Find and return the task
-        return projectTasks.find(task => task.id === id);
-    }
-
-    /**
-     * Get tasks by status
-     * @param {string} status - Task status
+     * Get tasks filtered by status for a specific project.
+     * This method uses the status index for efficient filtering when available,
+     * falling back to array filtering when necessary.
+     * 
+     * @param {string} status - Task status (e.g., 'pending', 'in-progress', 'completed')
      * @param {string} projectId - Required project ID to get tasks from a specific project
+     * @throws {Error} If project ID is not provided
+     * @returns {Promise<Array<Object>>} Array of tasks with the specified status
      */
     async getTasksByStatus(status, projectId) {
         if (!projectId) {
@@ -245,11 +370,63 @@ export class TaskManager {
         // Initialize for the project
         await this.init(projectId);
         
-        // Get the tasks for this project
-        const projectTasks = this.projectTasks.get(projectId) || [];
+        // Check indices first
+        const indices = this.taskIndices.get(projectId);
+        if (indices?.byStatus.has(status)) {
+            const taskIds = indices.byStatus.get(status);
+            return Array.from(taskIds).map(id => indices.byId.get(id));
+        }
         
-        // Filter and return tasks by status
-        return projectTasks.filter(task => task.status === status);
+        // Fallback to filter
+        const tasks = this.projectTasks.get(projectId) || [];
+        return tasks.filter(task => task.status === status);
+    }
+    
+    /**
+     * Get a task by ID
+     * @param {number} id - Task ID
+     * @param {string} projectId - Required project ID to get a task from a specific project
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @throws {TaskNotFoundError} If task is not found
+     * @returns {Promise<Object>} - The task with the specified ID
+     */
+    async getTask(id, projectId) {
+        if (!projectId) {
+            throw new ProjectNotFoundError('Project ID is required to get a task');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
+        }
+        
+        // Validate task ID
+        if (!isValidTaskId(id)) {
+            throw new TaskValidationError(`Invalid task ID: ${id}`, {
+                field: 'id',
+                value: id
+            });
+        }
+        
+        // Initialize for the project
+        await this.init(projectId);
+        
+        // Check indices first for efficient lookup
+        const indices = this.taskIndices.get(projectId);
+        if (indices?.byId.has(id)) {
+            return indices.byId.get(id);
+        }
+        
+        // Fallback to find in array
+        const tasks = this.projectTasks.get(projectId) || [];
+        const task = tasks.find(task => task.id === id);
+        
+        // If task not found, throw an error
+        if (!task) {
+            throw new TaskNotFoundError(`Task with ID ${id} not found in project ${projectId}`);
+        }
+        
+        return task;
     }
 
     /**
@@ -258,7 +435,12 @@ export class TaskManager {
      */
     async reloadTasks(projectId) {
         if (!projectId) {
-            throw new Error('Project ID is required to reload tasks');
+            throw new ProjectNotFoundError('Project ID is required to reload tasks');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
         }
         
         try {
@@ -313,7 +495,7 @@ export class TaskManager {
         // Get the task
         const task = await this.getTask(id, projectId);
         if (!task) {
-            throw new Error(`Task with id ${id} not found in project ${projectId}`);
+            throw new TaskNotFoundError(id, projectId);
         }
         
         // Update the task
@@ -336,13 +518,26 @@ export class TaskManager {
     }
 
     /**
-     * Get all tasks assigned to Windsurf
+     * Get all tasks assigned to Windsurf across all projects or from a specific project.
+     * This method uses the assignee index for efficient filtering when available,
+     * falling back to array filtering when necessary.
+     * 
      * @param {string} projectId - Optional project ID to get tasks from a specific project
+     * @returns {Promise<Array<Object>>} Array of tasks assigned to Windsurf
      */
     async getWindsurfTasks(projectId = null) {
         // If a specific project is requested, get tasks only from that project
         if (projectId) {
             await this.init(projectId);
+            
+            // Check indices first
+            const indices = this.taskIndices.get(projectId);
+            if (indices?.byAssignee.has('windsurf')) {
+                const taskIds = indices.byAssignee.get('windsurf');
+                return Array.from(taskIds).map(id => indices.byId.get(id));
+            }
+            
+            // Fallback to filter
             const projectTasks = this.projectTasks.get(projectId) || [];
             return projectTasks.filter(task => task.assignedTo === 'windsurf');
         }
@@ -351,16 +546,28 @@ export class TaskManager {
         const allWindsurfTasks = [];
         
         // Check each project in the map
-        for (const [projectId, _] of this.projectsMap) {
+        for (const [pid, _] of this.projectsMap) {
             try {
-                await this.init(projectId);
-                const projectTasks = this.projectTasks.get(projectId) || [];
+                await this.init(pid);
+                
+                // Check indices first
+                const indices = this.taskIndices.get(pid);
+                if (indices?.byAssignee.has('windsurf')) {
+                    const taskIds = indices.byAssignee.get('windsurf');
+                    const tasks = Array.from(taskIds)
+                        .map(id => ({ ...indices.byId.get(id), projectId: pid }));
+                    allWindsurfTasks.push(...tasks);
+                    continue;
+                }
+                
+                // Fallback to filter
+                const projectTasks = this.projectTasks.get(pid) || [];
                 const windsurfTasks = projectTasks
                     .filter(task => task.assignedTo === 'windsurf')
-                    .map(task => ({ ...task, projectId }));
+                    .map(task => ({ ...task, projectId: pid }));
                 allWindsurfTasks.push(...windsurfTasks);
             } catch (error) {
-                console.error(`Error getting Windsurf tasks for project ${projectId}:`, error);
+                logger.error(`Error getting Windsurf tasks for project ${pid}`, { error });
             }
         }
         
@@ -381,29 +588,42 @@ export class TaskManager {
         // Initialize for the project
         await this.init(projectId);
         
-        // Get the task
-        const task = await this.getTask(id, projectId);
-        if (!task) {
-            throw new Error(`Task with id ${id} not found in project ${projectId}`);
+        // Get the tasks for this project
+        const tasks = this.projectTasks.get(projectId) || [];
+        const taskIndex = tasks.findIndex(t => t.id === id);
+        
+        if (taskIndex === -1) {
+            throw new TaskNotFoundError(id, projectId);
         }
         
+        const task = tasks[taskIndex];
+        
         if (task.assignedTo !== 'windsurf') {
-            throw new Error(`Task with id ${id} in project ${projectId} is not assigned to Windsurf`);
+            throw new TaskStateError(
+                `Task with id ${id} in project ${projectId} is not assigned to Windsurf`,
+                id,
+                task.status,
+                'update_progress'
+            );
         }
         
         // If progress is 100%, mark as completed
         if (progress === 100) {
-            console.error(`Completing task #${id} in project ${projectId} with 100% progress`);
-            return this.completeTask(id, projectId);
+            task.status = 'completed';
+            task.progress = progress;
+            task.updatedAt = new Date().toISOString();
+        } else {
+            task.progress = progress;
+            task.updatedAt = new Date().toISOString();
         }
         
-        // Update the task progress
-        const updatedTask = await this.updateTask(id, { 
-            progress,
-            updatedAt: new Date().toISOString()
-        }, projectId);
+        // Update task in the list
+        tasks[taskIndex] = task;
+        this.projectTasks.set(projectId, tasks);
         
-        console.error(`Updated progress for task #${id} in project ${projectId} to ${progress}%`);
-        return updatedTask;
+        // Save tasks
+        await this.saveTasks(projectId);
+        
+        return task;
     }
 }

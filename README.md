@@ -13,6 +13,8 @@ A powerful MCP server for project-specific task management between Claude Deskto
 - **No API Required**: Works entirely through file-based storage and MCP integration
 - **Real-time Updates**: File watcher detects changes made by Windsurf and displays completion statistics
 - **Comprehensive Task Management**: Create, update, list, complete, and track progress of tasks
+- **High Performance**: Optimized with caching, debouncing, and indexing strategies
+- **Error Resilience**: Robust error handling and logging system
 
 ## System Architecture
 
@@ -29,11 +31,22 @@ flowchart LR
         Tools[MCP Tools]
     end
     
+    subgraph "Utilities"
+        Cache[Cache]
+        Debouncer[Debouncer]
+        ErrorHandler[Error Handler]
+        Logger[Logger]
+    end
+    
     Server --> TaskManager
     Server --> FileWatcher
     Server --> Tools
     TaskManager <--> TaskFiles
     FileWatcher --> TaskFiles
+    TaskManager --> Cache
+    TaskManager --> Debouncer
+    TaskManager --> ErrorHandler
+    TaskManager --> Logger
 ```
 
 ## Data Flow
@@ -134,6 +147,8 @@ Manages task operations for project-specific task files:
 - **listTasks(projectId)**: List all tasks for a project
 - **updateTask(id, updates, projectId)**: Update a task in a project
 - **completeTask(id, projectId)**: Mark a task as completed in a project
+- **getTasksByStatus(status, projectId)**: Get tasks filtered by status
+- **buildTaskIndices(projectId)**: Build indices for faster task lookups
 - **assignToWindsurf(id, projectId)**: Assign a task to Windsurf
 - **updateWindsurfTaskProgress(id, progress, projectId)**: Update task progress
 
@@ -174,6 +189,11 @@ Monitors project-specific task files for changes:
 4. Start the server:
    ```bash
    npm start
+   ```
+
+5. Run tests (optional):
+   ```bash
+   npm test
    ```
 
 ## MCP Tools
@@ -297,6 +317,36 @@ For efficient task tracking with Windsurf, follow these rules:
 - Always set progress to 100% when completing a task
 - Provide a summary of what was accomplished when completing a task
 - Check for and resolve any dependencies before marking a task complete
+
+## Performance Optimizations
+
+### Caching
+
+The system implements an in-memory caching mechanism to reduce file system operations:
+
+- **Task Data Caching**: Frequently accessed task data is cached in memory
+- **TTL-based Expiration**: Cache entries expire after a configurable time period
+- **Size Limits**: Cache size is limited to prevent excessive memory usage
+
+### Debouncing
+
+File write operations are optimized using debouncing:
+
+- **Grouped Writes**: Multiple write requests are grouped into a single operation
+- **Delayed Execution**: Writes are performed after a configurable delay
+- **Promise Queuing**: All pending requests receive the same result
+
+### Task Indexing
+
+Tasks are indexed for faster lookups and filtering:
+
+- **ID-based Index**: O(1) lookup by task ID
+- **Status Index**: Fast filtering by task status
+- **Assignee Index**: Quick retrieval of tasks by assignee
+
+## Documentation
+
+For detailed API documentation, see [API.md](docs/API.md).
 
 ## Contributing
 

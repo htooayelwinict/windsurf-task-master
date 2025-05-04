@@ -2,6 +2,9 @@ import chokidar from 'chokidar';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
+import { isValidProjectId, getProjectDirPath, getTasksFilePath } from '../utils/security.js';
+import { logger } from '../utils/logger.js';
+import { FileSystemError } from '../utils/errors.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,7 +43,21 @@ export class FileWatcher {
             if (dirPath === this.baseTasksDir) return;
             
             const projectId = path.basename(dirPath);
-            const projectTasksPath = path.join(dirPath, 'tasks.json');
+            
+            // Validate project ID to prevent path traversal attacks
+            if (!isValidProjectId(projectId)) {
+                logger.warn('Invalid project ID detected in directory watcher', { projectId });
+                return;
+            }
+            
+            // Get sanitized paths
+            const projectDir = getProjectDirPath(this.baseTasksDir, projectId);
+            if (!projectDir) {
+                logger.warn('Invalid project directory path', { projectId });
+                return;
+            }
+            
+            const projectTasksPath = getTasksFilePath(projectDir, 'tasks.json');
             
             // Watch this project's tasks.json file
             this.watchTasksFile(projectId, projectTasksPath);
@@ -60,7 +77,21 @@ export class FileWatcher {
             for (const entry of entries) {
                 if (entry.isDirectory()) {
                     const projectId = entry.name;
-                    const projectTasksPath = path.join(this.baseTasksDir, projectId, 'tasks.json');
+                    
+                    // Validate project ID to prevent path traversal attacks
+                    if (!isValidProjectId(projectId)) {
+                        logger.warn('Invalid project ID detected in directory scan', { projectId });
+                        continue;
+                    }
+                    
+                    // Get sanitized paths
+                    const projectDir = getProjectDirPath(this.baseTasksDir, projectId);
+                    if (!projectDir) {
+                        logger.warn('Invalid project directory path', { projectId });
+                        continue;
+                    }
+                    
+                    const projectTasksPath = getTasksFilePath(projectDir, 'tasks.json');
                     
                     // Watch this project's tasks.json file
                     this.watchTasksFile(projectId, projectTasksPath);
@@ -86,6 +117,18 @@ export class FileWatcher {
     watchTasksFile(projectId, tasksPath) {
         // Skip if already watching this file
         if (this.watchers.has(projectId)) return;
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            logger.warn('Invalid project ID detected in watchTasksFile', { projectId });
+            return;
+        }
+        
+        // Validate tasks path
+        if (!tasksPath || !tasksPath.endsWith('tasks.json')) {
+            logger.warn('Invalid tasks path detected', { tasksPath });
+            return;
+        }
         
         const watcher = chokidar.watch(tasksPath, {
             persistent: true,

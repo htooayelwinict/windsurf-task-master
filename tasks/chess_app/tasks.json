@@ -1,0 +1,341 @@
+[
+  {
+    "title": "Project Setup and Architecture Planning",
+    "description": "Set up the initial project structure, define architecture, and create necessary configuration files for the Node.js chess application. This includes setting up the repository, dependency management, and defining the overall technical architecture.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:39:36.375Z",
+    "updatedAt": "2025-05-04T18:39:36.378Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Backend API Development",
+    "description": "Develop the Node.js/Express backend API for the chess application. This includes creating RESTful endpoints for user authentication, game state management, and move validation. Implement JWT-based authentication and session handling.",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "id": 2,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:39:41.714Z",
+    "updatedAt": "2025-05-04T18:39:41.714Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Real-time Game Communication",
+    "description": "Implement Socket.io for real-time game communication between players. This includes setting up WebSocket connections, handling game events, and ensuring smooth real-time gameplay experience.",
+    "priority": "high",
+    "dependencies": [
+      2
+    ],
+    "id": 3,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:39:46.976Z",
+    "updatedAt": "2025-05-04T18:39:46.976Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Frontend React Development",
+    "description": "Develop the React.js frontend for the chess application with responsive design. Implement the chess board UI, game controls, user authentication forms, and ensure the interface works well across different devices and screen sizes.",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "id": 4,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:39:52.236Z",
+    "updatedAt": "2025-05-04T18:39:52.236Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Chess Logic Implementation",
+    "description": "Integrate chess.js library and implement game logic for move validation, check/checkmate detection, game state management, and AI opponent logic for single-player mode. Ensure proper integration with both frontend and backend components.",
+    "priority": "high",
+    "dependencies": [
+      2,
+      4
+    ],
+    "id": 5,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:39:57.828Z",
+    "updatedAt": "2025-05-04T18:39:57.828Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Database Design and Implementation",
+    "description": "Design and implement MongoDB database schema for user profiles, game sessions, match history, and statistics. Create models, controllers, and database connection logic. Implement data persistence for saved games and user profiles.",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "id": 6,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:02.657Z",
+    "updatedAt": "2025-05-04T18:40:02.657Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "User Authentication and Session Management",
+    "description": "Implement secure user authentication with JWT, session persistence across devices, account creation, password reset functionality, and secure logout. Ensure proper session handling for both web and mobile experiences.",
+    "priority": "high",
+    "dependencies": [
+      2,
+      6
+    ],
+    "id": 7,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:07.874Z",
+    "updatedAt": "2025-05-04T18:40:07.874Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Responsive Design and UI/UX Implementation",
+    "description": "Implement responsive design with Tailwind CSS to ensure the application works well on all devices. Create intuitive UI components, implement dark/light mode toggle, and ensure accessibility features are properly implemented.",
+    "priority": "medium",
+    "dependencies": [
+      4
+    ],
+    "id": 8,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:13.408Z",
+    "updatedAt": "2025-05-04T18:40:13.408Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "PWA Implementation for Mobile Experience",
+    "description": "Implement Progressive Web App (PWA) capabilities to provide a native-like experience on mobile devices. This includes creating service workers, manifest files, offline support, and ensuring proper installation experience on mobile devices.",
+    "priority": "medium",
+    "dependencies": [
+      4,
+      8
+    ],
+    "id": 9,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:19.538Z",
+    "updatedAt": "2025-05-04T18:40:19.538Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Testing and Quality Assurance",
+    "description": "Implement comprehensive testing strategy including unit tests, integration tests, and end-to-end tests. Set up testing frameworks (Jest, React Testing Library, Supertest) and ensure proper test coverage for critical components.",
+    "priority": "medium",
+    "dependencies": [
+      2,
+      3,
+      4,
+      5,
+      7
+    ],
+    "id": 10,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:25.682Z",
+    "updatedAt": "2025-05-04T18:40:25.682Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Deployment and DevOps Setup",
+    "description": "Set up deployment pipeline, configure hosting environment, implement CI/CD workflows, and ensure proper monitoring and logging. This includes setting up Docker containers, configuring cloud hosting, and implementing security best practices.",
+    "priority": "medium",
+    "dependencies": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "id": 11,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:31.173Z",
+    "updatedAt": "2025-05-04T18:40:31.173Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Documentation and User Guides",
+    "description": "Create comprehensive documentation including API documentation, user guides, developer documentation, and installation instructions. Ensure the documentation is clear, concise, and covers all aspects of the application.",
+    "priority": "medium",
+    "dependencies": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "id": 12,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:36.258Z",
+    "updatedAt": "2025-05-04T18:40:36.258Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Project Setup and Architecture Planning",
+    "description": "Set up the initial project structure, define architecture, and create necessary configuration files for the Node.js chess application. This includes setting up the repository, dependency management, and defining the overall technical architecture.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 13,
+    "status": "in-progress",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:40:49.951Z",
+    "updatedAt": "2025-05-04T18:40:54.021Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Project Setup and Architecture Design",
+    "description": "Set up the initial project structure, define the architecture, and create necessary configuration files for the NodeJS chess application. This includes setting up the directory structure, initializing package.json, and configuring essential development tools.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 14,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-04T18:45:57.682Z",
+    "updatedAt": "2025-05-04T19:01:37.670Z",
+    "projectId": "chess_app",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T18:46:47.549Z",
+    "completedAt": "2025-05-04T19:01:37.670Z"
+  },
+  {
+    "title": "Core Chess Logic Implementation",
+    "description": "Implement the core chess game logic including board representation, move validation, check/checkmate detection, and game state management. Integrate chess.js library for handling chess rules and game mechanics.",
+    "priority": "high",
+    "dependencies": [
+      14
+    ],
+    "id": 15,
+    "status": "in-progress",
+    "progress": 25,
+    "createdAt": "2025-05-04T18:46:02.983Z",
+    "updatedAt": "2025-05-04T19:03:11.564Z",
+    "projectId": "chess_app",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T19:03:01.036Z"
+  },
+  {
+    "title": "Frontend UI/UX Development",
+    "description": "Design and implement the user interface for the chess application using React.js. Create responsive components for the chess board, pieces, game controls, and user dashboard. Implement modern UI/UX with Tailwind CSS for styling and responsiveness across devices.",
+    "priority": "high",
+    "dependencies": [
+      14,
+      15
+    ],
+    "id": 16,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:08.189Z",
+    "updatedAt": "2025-05-04T18:46:08.189Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Authentication and Session Handling",
+    "description": "Implement user authentication system with registration, login, and password reset functionality. Set up JWT-based session management for secure authentication across devices. Create user profiles with game history and statistics storage. Implement social login options.",
+    "priority": "high",
+    "dependencies": [
+      14
+    ],
+    "id": 17,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:13.003Z",
+    "updatedAt": "2025-05-04T18:46:13.003Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Multiplayer Functionality",
+    "description": "Implement real-time multiplayer chess gameplay using Socket.io. Create game rooms, matchmaking system, and handle player connections/disconnections. Implement game invitations, spectator mode, and in-game chat functionality.",
+    "priority": "medium",
+    "dependencies": [
+      15,
+      16,
+      17
+    ],
+    "id": 18,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:18.122Z",
+    "updatedAt": "2025-05-04T18:46:18.122Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "AI Opponent Implementation",
+    "description": "Develop AI chess opponents with multiple difficulty levels. Integrate chess engine for move calculation and implement different AI strategies. Create a single-player mode with adjustable AI difficulty and tutorial features for beginners.",
+    "priority": "medium",
+    "dependencies": [
+      15,
+      16
+    ],
+    "id": 19,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:23.544Z",
+    "updatedAt": "2025-05-04T18:46:23.544Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Mobile Responsiveness and Optimization",
+    "description": "Optimize the application for mobile devices using React Native. Implement responsive design for various screen sizes and touch interactions. Ensure smooth performance across different devices and browsers. Test and optimize for mobile-specific features and constraints.",
+    "priority": "medium",
+    "dependencies": [
+      16
+    ],
+    "id": 20,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:28.729Z",
+    "updatedAt": "2025-05-04T18:46:28.729Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Testing and Bug Fixing",
+    "description": "Implement comprehensive testing strategy including unit tests, integration tests, and end-to-end tests. Set up automated testing with Jest and React Testing Library. Perform cross-browser and cross-device testing. Identify and fix bugs and performance issues.",
+    "priority": "high",
+    "dependencies": [
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "id": 21,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:33.900Z",
+    "updatedAt": "2025-05-04T18:46:33.900Z",
+    "projectId": "chess_app"
+  },
+  {
+    "title": "Deployment and Launch",
+    "description": "Set up containerization with Docker and configure CI/CD pipeline for automated testing and deployment. Deploy the application to cloud hosting (AWS, Heroku). Configure CDN for static assets and set up monitoring and logging systems. Prepare for production launch.",
+    "priority": "medium",
+    "dependencies": [
+      21
+    ],
+    "id": 22,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:46:38.874Z",
+    "updatedAt": "2025-05-04T18:46:38.874Z",
+    "projectId": "chess_app"
+  }
+]

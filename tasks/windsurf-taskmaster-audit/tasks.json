@@ -1,0 +1,123 @@
+[
+  {
+    "id": 1,
+    "title": "Code Architecture Analysis",
+    "description": "Analyze current code architecture, identify potential improvements in code organization, modularity, and design patterns.",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:09.204Z",
+    "updatedAt": "2025-05-04T17:55:45.417Z",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T17:54:40.212Z",
+    "progress": 100,
+    "completedAt": "2025-05-04T17:55:45.416Z"
+  },
+  {
+    "id": 2,
+    "title": "Error Handling and Logging Review",
+    "description": "Review error handling mechanisms, logging implementation, and error recovery strategies. Ensure comprehensive error tracking and debugging capabilities.",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:16.565Z",
+    "updatedAt": "2025-05-04T18:04:15.751Z",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T17:55:57.656Z",
+    "progress": 100,
+    "completedAt": "2025-05-04T18:04:15.751Z"
+  },
+  {
+    "id": 3,
+    "title": "Performance Optimization Analysis",
+    "description": "Identify performance bottlenecks, analyze resource usage, and recommend optimization strategies for better performance.",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:19.721Z",
+    "updatedAt": "2025-05-04T18:11:54.047Z",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T18:06:51.548Z",
+    "progress": 100,
+    "completedAt": "2025-05-04T18:11:54.045Z"
+  },
+  {
+    "id": 4,
+    "title": "Test Coverage Assessment",
+    "description": "Evaluate current test coverage, identify gaps in testing, and plan for comprehensive test suite improvements.",
+    "status": "completed",
+    "priority": "medium",
+    "dependencies": [
+      1
+    ],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:25.486Z",
+    "updatedAt": "2025-05-04T18:25:54.755Z",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T18:11:56.998Z",
+    "progress": 100,
+    "completedAt": "2025-05-04T18:25:54.755Z"
+  },
+  {
+    "id": 5,
+    "title": "Documentation Review and Update",
+    "description": "Review existing documentation, identify gaps, and plan for documentation improvements including API docs, setup guides, and architecture documentation.",
+    "status": "completed",
+    "priority": "medium",
+    "dependencies": [],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:31.914Z",
+    "updatedAt": "2025-05-04T18:31:29.015Z",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T18:26:19.328Z",
+    "progress": 100,
+    "completedAt": "2025-05-04T18:31:29.015Z"
+  },
+  {
+    "id": 6,
+    "title": "Security Assessment",
+    "description": "Review security measures, identify potential vulnerabilities, and recommend security improvements.",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:39.731Z",
+    "updatedAt": "2025-05-04T18:35:37.028Z",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-04T18:31:58.389Z",
+    "progress": 100,
+    "completedAt": "2025-05-04T18:35:37.028Z"
+  },
+  {
+    "id": 7,
+    "title": "Dependency Management Review",
+    "description": "Analyze current dependencies, check for outdated packages, security vulnerabilities, and optimize dependency management.",
+    "status": "pending",
+    "priority": "medium",
+    "dependencies": [],
+    "projectId": "windsurf-taskmaster-audit",
+    "createdAt": "2025-05-04T17:53:44.966Z",
+    "updatedAt": "2025-05-04T17:53:44.966Z"
+  },
+  {
+    "title": "Fix missing getTask method in TaskManager",
+    "description": "Implement the missing getTask method in the TaskManager class to fix the error \"this.getTask is not a function\" that occurs when assigning tasks to Windsurf.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 8,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-04T18:44:27.326Z",
+    "updatedAt": "2025-05-04T18:44:27.329Z",
+    "projectId": "windsurf-taskmaster-audit"
+  }
+]

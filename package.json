@@ -9,7 +9,9 @@
   },
   "scripts": {
     "start": "node mcp-server/server.js",
-    "test": "echo \"No tests yet\""
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
   "keywords": [
     "mcp",
@@ -24,5 +26,13 @@
     "zod": "^3.23.8",
     "chalk": "^5.4.1",
     "chokidar": "^3.6.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "@babel/preset-env": "^7.24.0",
+    "babel-jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "mock-fs": "^5.2.0"
   }
 }
