@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "windsurf-task-master": {
+      "command": "node",
+      "args": ["./mcp-server/server.js"],
+      "env": {}
+    }
+  }
+}

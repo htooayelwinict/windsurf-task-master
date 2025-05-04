@@ -1,0 +1,233 @@
+[
+  {
+    "id": 1,
+    "title": "Create Project Structure",
+    "description": "Set up the initial project structure including directories and basic files",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:23.236Z",
+    "updatedAt": "2025-05-03T20:17:28.122Z"
+  },
+  {
+    "id": 2,
+    "title": "Set up dependencies and requirements",
+    "description": "Create requirements.txt with all necessary dependencies including BeautifulSoup, Playwright, and Selenium",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:27.848Z",
+    "updatedAt": "2025-05-03T20:17:30.933Z"
+  },
+  {
+    "id": 3,
+    "title": "Implement BeautifulSoup Scraper",
+    "description": "Create the BeautifulSoup scraper module for initial HTML parsing and basic content extraction",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      2
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:31.866Z",
+    "updatedAt": "2025-05-03T20:17:33.217Z"
+  },
+  {
+    "id": 4,
+    "title": "Implement Playwright Scraper",
+    "description": "Create the Playwright scraper module for lightweight, fast scraping of dynamic content",
+    "status": "completed",
+    "priority": "medium",
+    "dependencies": [
+      2
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:36.838Z",
+    "updatedAt": "2025-05-03T20:19:43.392Z"
+  },
+  {
+    "id": 5,
+    "title": "Implement Selenium Scraper",
+    "description": "Create the Selenium scraper module for complex, heavy-duty scraping tasks requiring extensive browser interaction",
+    "status": "completed",
+    "priority": "medium",
+    "dependencies": [
+      2
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:40.582Z",
+    "updatedAt": "2025-05-03T20:19:46.313Z"
+  },
+  {
+    "id": 6,
+    "title": "Develop Content Processor",
+    "description": "Create a module to process and clean the scraped content for CSV storage",
+    "status": "completed",
+    "priority": "medium",
+    "dependencies": [
+      3,
+      4,
+      5
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:44.173Z",
+    "updatedAt": "2025-05-03T20:19:48.437Z"
+  },
+  {
+    "id": 7,
+    "title": "Implement CSV Data Storage",
+    "description": "Create a module to save scraped data (URL, site title, content) to CSV files",
+    "status": "completed",
+    "priority": "medium",
+    "dependencies": [
+      6
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:48.479Z",
+    "updatedAt": "2025-05-03T20:19:52.286Z"
+  },
+  {
+    "id": 8,
+    "title": "Create Scraper Factory/Selector",
+    "description": "Implement a system to select the appropriate scraper (BS4, Playwright, or Selenium) based on website complexity",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      3,
+      4,
+      5
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:52.156Z",
+    "updatedAt": "2025-05-03T20:17:35.477Z"
+  },
+  {
+    "id": 9,
+    "title": "Develop Main Application Interface",
+    "description": "Create the main application script that ties all components together and provides a CLI for users",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [
+      7,
+      8
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:14:56.836Z",
+    "updatedAt": "2025-05-03T20:19:54.988Z"
+  },
+  {
+    "id": 10,
+    "title": "Improve Content Extraction",
+    "description": "Enhance the BS4 scraper to better target the main article content, especially for documentation sites",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:30:03.170Z",
+    "updatedAt": "2025-05-03T20:31:46.105Z"
+  },
+  {
+    "id": 11,
+    "title": "Improve Scraper Factory Detection",
+    "description": "Enhance the scraper factory to better detect JavaScript-heavy sites and use Playwright or Selenium for them",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:35:46.274Z",
+    "updatedAt": "2025-05-03T20:38:05.499Z"
+  },
+  {
+    "id": 12,
+    "title": "Balance Scraper Selection Logic",
+    "description": "Refine the scraper factory to better balance the selection of scrapers, ensuring that Selenium is only used for truly complex sites",
+    "status": "completed",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-03T20:45:47.397Z",
+    "updatedAt": "2025-05-03T20:46:27.555Z"
+  },
+  {
+    "id": 13,
+    "title": "Project Setup and Environment Configuration",
+    "description": "Create project structure, set up virtual environment, and install required dependencies (BeautifulSoup, Playwright, Selenium)",
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-04T16:40:46.047Z",
+    "updatedAt": "2025-05-04T16:40:46.049Z"
+  },
+  {
+    "id": 14,
+    "title": "BeautifulSoup Scraper Module",
+    "description": "Implement the BeautifulSoup scraper module for initial HTML parsing and static content extraction. This will be the first attempt at scraping any website.",
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      13
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-04T16:40:49.753Z",
+    "updatedAt": "2025-05-04T16:40:49.753Z"
+  },
+  {
+    "id": 15,
+    "title": "Playwright Scraper Module",
+    "description": "Implement the Playwright scraper module for lightweight, fast scraping of dynamic content. This will be used when BeautifulSoup is insufficient.",
+    "status": "pending",
+    "priority": "medium",
+    "dependencies": [
+      13
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-04T16:40:53.056Z",
+    "updatedAt": "2025-05-04T16:40:53.056Z"
+  },
+  {
+    "id": 16,
+    "title": "Selenium Scraper Module",
+    "description": "Implement the Selenium scraper module for complex websites requiring heavy browser interaction. This will be used when both BeautifulSoup and Playwright are insufficient.",
+    "status": "pending",
+    "priority": "medium",
+    "dependencies": [
+      13
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-04T16:40:56.968Z",
+    "updatedAt": "2025-05-04T16:40:56.969Z"
+  },
+  {
+    "id": 17,
+    "title": "Scraper Factory and Selection Logic",
+    "description": "Implement a factory pattern and logic to intelligently select the appropriate scraper (BeautifulSoup, Playwright, or Selenium) based on website complexity and content requirements.",
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      14,
+      15,
+      16
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-04T16:41:01.242Z",
+    "updatedAt": "2025-05-04T16:41:01.242Z"
+  },
+  {
+    "id": 18,
+    "title": "Data Extraction and Processing",
+    "description": "Implement functions to extract relevant data (URL, title, content) from scraped pages and process it into a standardized format for storage.",
+    "status": "pending",
+    "priority": "high",
+    "dependencies": [
+      17
+    ],
+    "projectId": "webscraper",
+    "createdAt": "2025-05-04T16:41:04.756Z",
+    "updatedAt": "2025-05-04T16:41:04.756Z"
+  }
+]

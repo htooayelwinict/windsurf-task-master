@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "title": "Create Python CLI Tic-Tac-Toe Game",
+    "description": "Develop a command-line interface tic-tac-toe game in Python with a clean, maintainable structure.",
+    "status": "in-progress",
+    "priority": "high",
+    "dependencies": [],
+    "projectId": "tic-tac-toe",
+    "createdAt": "2025-05-04T04:22:14.348Z",
+    "updatedAt": "2025-05-04T04:22:55.677Z"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "taskWatcher": {
+    "enabled": true,
+    "taskFile": "./tasks/tasks.json",
+    "autoUpdateStatus": true,
+    "hooks": {
+      "onTaskStart": "update-status:in-progress",
+      "onTaskComplete": "update-status:completed"
+    }
+  },
+  "taskRules": {
+    "autoStart": {
+      "priority": ["high", "medium"],
+      "dependencies": "resolved"
+    },
+    "notifications": {
+      "onTaskCreated": true,
+      "onTaskCompleted": true
+    }
+  }
+}
