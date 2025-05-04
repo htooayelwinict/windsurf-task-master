@@ -308,4 +308,6 @@ MIT
 
 ## Credits
 
-This project is based on [claude-task-master](https://github.com/eyaltoledano/claude-task-master) by Eyal Toledano and AI Jason. The original concept has been extended with project-specific task isolation and enhanced progress tracking.
+This project is based on [claude-task-master](https://github.com/eyaltoledano/claude-task-master) by Eyal Toledano.
+Also thanks to AI Jason https://www.youtube.com/@AIJasonZ for the original concept. It has been extended with project-specific task isolation and enhanced progress tracking.
+
