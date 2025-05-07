@@ -12,7 +12,10 @@ This document provides detailed information about the core components and utilit
    - [Debouncer](#debouncer)
    - [Error Handling](#error-handling)
    - [Logger](#logger)
-3. [Performance Optimization](#performance-optimization)
+3. [Task Management](#task-management)
+   - [Task Deletion](#task-deletion)
+   - [Subtask Management](#subtask-management)
+4. [Performance Optimization](#performance-optimization)
    - [Caching Strategy](#caching-strategy)
    - [Debouncing Strategy](#debouncing-strategy)
    - [Task Indexing](#task-indexing)
@@ -26,9 +29,9 @@ The `TaskManager` class is responsible for managing tasks across different proje
 #### Key Methods
 
 | Method | Description | Parameters | Returns |
-|--------|-------------|------------|---------|
+|--------|-------------|------------|--------|
 | `init(projectId)` | Initialize the task manager for a specific project | `projectId` (string): Project identifier | Promise<void> |
-| `createTask(taskData, projectId)` | Create a new task for a project | `taskData` (object): Task data, `projectId` (string): Project identifier | Promise<Task> |
+| `createTask(taskData, projectId, parentTaskId)` | Create a new task or subtask for a project | `taskData` (object): Task data, `projectId` (string): Project identifier, `parentTaskId` (number, optional): Parent task ID for subtasks | Promise<Task> |
 | `updateTask(id, updates, projectId)` | Update an existing task | `id` (number): Task ID, `updates` (object): Updates to apply, `projectId` (string): Project identifier | Promise<Task> |
 | `completeTask(id, projectId)` | Mark a task as completed | `id` (number): Task ID, `projectId` (string): Project identifier | Promise<Task> |
 | `listTasks(projectId)` | List all tasks for a project | `projectId` (string): Project identifier | Promise<Task[]> |
@@ -36,6 +39,10 @@ The `TaskManager` class is responsible for managing tasks across different proje
 | `assignToWindsurf(id, projectId)` | Assign a task to Windsurf | `id` (number): Task ID, `projectId` (string): Project identifier | Promise<Task> |
 | `getWindsurfTasks(projectId)` | Get tasks assigned to Windsurf | `projectId` (string, optional): Project identifier | Promise<Task[]> |
 | `updateWindsurfTaskProgress(id, progress, projectId)` | Update task progress | `id` (number): Task ID, `progress` (number): Progress percentage, `projectId` (string): Project identifier | Promise<Task> |
+| `deleteTask(id, projectId, reorganizeIds)` | Delete a task and its subtasks | `id` (number): Task ID, `projectId` (string): Project identifier, `reorganizeIds` (boolean, optional): Whether to reorganize task IDs after deletion | Promise<Task> |
+| `deleteTasks(criteria, projectId)` | Delete multiple tasks based on criteria | `criteria` (object): Criteria for selecting tasks to delete, `projectId` (string): Project identifier | Promise<Task[]> |
+| `addSubtask(subtaskData, parentTaskId, projectId)` | Add a subtask to a parent task | `subtaskData` (object): Subtask data, `parentTaskId` (number): Parent task ID, `projectId` (string): Project identifier | Promise<Task> |
+| `getSubtasks(parentTaskId, projectId)` | Get all subtasks for a parent task | `parentTaskId` (number): Parent task ID, `projectId` (string): Project identifier | Promise<Task[]> |
 
 #### Usage Example
 
@@ -55,6 +62,13 @@ const task = await taskManager.createTask({
   priority: 'high'
 }, 'my-project');
 
+// Create a subtask
+const subtask = await taskManager.addSubtask({
+  title: 'Implement helper function',
+  description: 'Create utility function for feature X',
+  priority: 'medium'
+}, task.id, 'my-project');
+
 // Assign to Windsurf
 await taskManager.assignToWindsurf(task.id, 'my-project');
 
@@ -63,6 +77,14 @@ await taskManager.updateWindsurfTaskProgress(task.id, 50, 'my-project');
 
 // Complete the task
 await taskManager.completeTask(task.id, 'my-project');
+
+// Delete a task and its subtasks
+await taskManager.deleteTask(task.id, 'my-project', true);
+
+// Delete multiple tasks based on criteria
+await taskManager.deleteTasks({
+  status: 'completed'
+}, 'my-project');
 ```
 
 ### FileWatcher
@@ -219,6 +241,68 @@ File write operations are debounced to optimize performance:
 2. **Delayed Execution**: Write operations are delayed until a specified time has passed since the last request
 3. **Promise Queuing**: All requests within the debounce window receive the same result promise
 
+## Task Management
+
+### Task Deletion
+
+The Windsurf Task Master provides robust task deletion capabilities:
+
+#### Single Task Deletion
+
+The `deleteTask` method allows deleting a single task by ID:
+
+```javascript
+await taskManager.deleteTask(taskId, projectId, reorganizeIds);
+```
+
+This method:
+- Deletes the specified task
+- Automatically deletes all subtasks
+- Optionally reorganizes task IDs to maintain sequential ordering
+- Updates parent-child relationships for subtasks
+
+#### Batch Task Deletion
+
+The `deleteTasks` method allows deleting multiple tasks based on various criteria:
+
+```javascript
+await taskManager.deleteTasks(criteria, projectId);
+```
+
+Supported criteria include:
+- **By IDs**: Delete specific tasks by their IDs
+- **By Status**: Delete all tasks with a specific status
+- **Duplicates**: Remove tasks with identical titles and descriptions
+- **Unqualified**: Remove tasks missing required fields
+
+### Subtask Management
+
+The system supports hierarchical task management through subtasks:
+
+#### Adding Subtasks
+
+Subtasks can be added to parent tasks using the `addSubtask` method:
+
+```javascript
+await taskManager.addSubtask(subtaskData, parentTaskId, projectId);
+```
+
+Subtasks:
+- Are regular tasks with a parent-child relationship
+- Inherit properties from their parent tasks (e.g., priority)
+- Are tracked in a parent-child relationship map
+- Are automatically deleted when their parent is deleted
+
+#### Retrieving Subtasks
+
+Subtasks can be retrieved using the `getSubtasks` method:
+
+```javascript
+const subtasks = await taskManager.getSubtasks(parentTaskId, projectId);
+```
+
+This returns all subtasks associated with a specific parent task.
+
 ### Task Indexing
 
 Tasks are indexed for faster lookups:
@@ -226,3 +310,4 @@ Tasks are indexed for faster lookups:
 1. **ID-based Index**: Tasks are indexed by their ID for O(1) lookup
 2. **Status Index**: Tasks are indexed by status for efficient filtering
 3. **Assignee Index**: Tasks are indexed by assignee for quick retrieval of tasks assigned to specific users
+4. **Parent Task Index**: Tasks are indexed by parent task ID for efficient subtask retrieval

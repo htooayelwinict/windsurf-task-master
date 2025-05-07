@@ -12,7 +12,9 @@ A powerful MCP server for project-specific task management between Claude Deskto
 - **Windsurf Sync**: Automatically sync task updates between Claude Desktop and Windsurf
 - **No API Required**: Works entirely through file-based storage and MCP integration
 - **Real-time Updates**: File watcher detects changes made by Windsurf and displays completion statistics
-- **Comprehensive Task Management**: Create, update, list, complete, and track progress of tasks
+- **Comprehensive Task Management**: Create, update, list, complete, delete, and track progress of tasks
+- **Subtask Support**: Break down complex tasks into manageable subtasks with parent-child relationships
+- **Task Cleanup**: Remove duplicate or unqualified tasks and reorganize task IDs
 - **High Performance**: Optimized with caching, debouncing, and indexing strategies
 - **Error Resilience**: Robust error handling and logging system
 
@@ -108,6 +110,8 @@ classDiagram
         +string createdAt
         +string updatedAt
         +string projectId
+        +number[] subtasks
+        +boolean isSubtask
     }
     
     class Project {
@@ -116,6 +120,7 @@ classDiagram
     }
     
     Project "1" --> "*" Task: contains
+    Task "1" --> "*" Task: has subtasks
 ```
 
 ### Task JSON Example
@@ -132,7 +137,29 @@ classDiagram
   "assignedAt": "2025-05-04T10:00:00Z",
   "progress": 75,
   "createdAt": "2025-05-04T09:00:00Z",
-  "updatedAt": "2025-05-04T15:30:00Z"
+  "updatedAt": "2025-05-04T15:30:00Z",
+  "subtasks": [4, 5, 6],
+  "isSubtask": false
+}
+```
+
+#### Subtask JSON Example
+
+```json
+{
+  "id": 4,
+  "title": "Implement JWT token generation",
+  "description": "Create utility for generating secure JWT tokens",
+  "status": "completed",
+  "priority": "high",
+  "dependencies": [],
+  "assignedTo": "windsurf",
+  "assignedAt": "2025-05-04T10:30:00Z",
+  "progress": 100,
+  "createdAt": "2025-05-04T10:15:00Z",
+  "updatedAt": "2025-05-04T14:00:00Z",
+  "subtasks": [],
+  "isSubtask": true
 }
 ```
 
@@ -143,7 +170,7 @@ classDiagram
 Manages task operations for project-specific task files:
 
 - **init(projectId)**: Initialize task manager for a specific project
-- **createTask(taskData, projectId)**: Create a new task for a project
+- **createTask(taskData, projectId, parentTaskId)**: Create a new task or subtask for a project
 - **listTasks(projectId)**: List all tasks for a project
 - **updateTask(id, updates, projectId)**: Update a task in a project
 - **completeTask(id, projectId)**: Mark a task as completed in a project
@@ -151,6 +178,11 @@ Manages task operations for project-specific task files:
 - **buildTaskIndices(projectId)**: Build indices for faster task lookups
 - **assignToWindsurf(id, projectId)**: Assign a task to Windsurf
 - **updateWindsurfTaskProgress(id, progress, projectId)**: Update task progress
+- **deleteTask(id, projectId, reorganizeIds)**: Delete a task and its subtasks
+- **deleteTasks(criteria, projectId)**: Delete multiple tasks based on criteria
+- **reorganizeTaskIds(tasks)**: Reorganize task IDs to maintain sequential ordering
+- **addSubtask(subtaskData, parentTaskId, projectId)**: Add a subtask to a parent task
+- **getSubtasks(parentTaskId, projectId)**: Get all subtasks for a parent task
 
 ### FileWatcher
 
@@ -295,6 +327,58 @@ mcp1_display_task_status({
 })
 ```
 
+### 9. delete_task
+
+Delete a task by ID, including all its subtasks.
+
+```javascript
+mcp1_delete_task({
+  id: 1,
+  projectId: "project-name",
+  reorganizeIds: true // optional, default: true
+})
+```
+
+### 10. delete_tasks
+
+Delete multiple tasks based on criteria.
+
+```javascript
+mcp1_delete_tasks({
+  projectId: "project-name",
+  ids: [1, 2, 3], // optional: delete specific task IDs
+  status: "completed", // optional: delete all tasks with this status
+  duplicates: true, // optional: delete duplicate tasks
+  unqualified: true // optional: delete tasks missing required fields
+})
+```
+
+### 11. add_subtask
+
+Add a subtask to a parent task.
+
+```javascript
+mcp1_add_subtask({
+  parentTaskId: 1,
+  title: "Implement feature Y",
+  description: "Detailed description of the subtask",
+  priority: "medium", // optional, inherits from parent if not specified
+  dependencies: [2, 3], // optional
+  projectId: "project-name"
+})
+```
+
+### 12. get_subtasks
+
+Get all subtasks for a parent task.
+
+```javascript
+mcp1_get_subtasks({
+  parentTaskId: 1,
+  projectId: "project-name"
+})
+```
+
 ## Windsurf Task Management Rules
 
 For efficient task tracking with Windsurf, follow these rules:
@@ -305,6 +389,7 @@ For efficient task tracking with Windsurf, follow these rules:
 - Break down complex user requests into multiple smaller tasks
 - Set initial progress to 0% when assigning to Windsurf
 - Create a new project ID for each distinct user objective
+- For complex tasks, use subtasks to break them down into manageable pieces
 
 ### Progress Tracking Rules
 - Update task progress at meaningful milestones (25%, 50%, 75%, 100%)
@@ -343,6 +428,7 @@ Tasks are indexed for faster lookups and filtering:
 - **ID-based Index**: O(1) lookup by task ID
 - **Status Index**: Fast filtering by task status
 - **Assignee Index**: Quick retrieval of tasks by assignee
+- **Parent Task Index**: Fast retrieval of subtasks by parent task ID
 
 ## Documentation
 

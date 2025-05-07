@@ -52,6 +52,9 @@ export class TaskManager {
         
         // Save debounce delay
         this.saveDelay = 1000; // 1 second delay for debounced saves
+        
+        // Subtask tracking
+        this.subtaskParentMap = new Map(); // Map subtask IDs to parent task IDs
     }
 
     /**
@@ -228,8 +231,9 @@ export class TaskManager {
      * Create a new task
      * @param {Object} taskData - Task data
      * @param {string} projectId - Required project ID to create the task for a specific project
+     * @param {number} parentTaskId - Optional parent task ID for subtasks
      */
-    async createTask(taskData, projectId) {
+    async createTask(taskData, projectId, parentTaskId = null) {
         if (!projectId) {
             throw new Error('Project ID is required to create a task');
         }
@@ -250,12 +254,28 @@ export class TaskManager {
             updatedAt: new Date().toISOString(),
             dependencies: taskData.dependencies || [],
             priority: taskData.priority || 'medium',
-            projectId
+            projectId,
+            subtasks: [],
+            isSubtask: parentTaskId !== null
         };
         
         // Add to tasks list
         tasks.push(newTask);
         this.projectTasks.set(projectId, tasks);
+        
+        // If this is a subtask, add it to the parent task's subtasks array
+        if (parentTaskId) {
+            const parentTaskIndex = tasks.findIndex(task => task.id === parentTaskId);
+            if (parentTaskIndex !== -1) {
+                if (!tasks[parentTaskIndex].subtasks) {
+                    tasks[parentTaskIndex].subtasks = [];
+                }
+                tasks[parentTaskIndex].subtasks.push(newTask.id);
+                
+                // Track the parent-child relationship
+                this.subtaskParentMap.set(`${projectId}_${newTask.id}`, parentTaskId);
+            }
+        }
         
         // Save tasks
         await this.saveTasks(projectId);
@@ -325,6 +345,20 @@ export class TaskManager {
             ...updates,
             updatedAt: new Date().toISOString()
         };
+        
+        // If progress is being updated, update subtasks progress accordingly
+        if (updates.progress !== undefined && projectTasks[taskIndex].subtasks && projectTasks[taskIndex].subtasks.length > 0) {
+            // Only propagate progress if all subtasks are completed
+            const allSubtasksCompleted = projectTasks[taskIndex].subtasks.every(subtaskId => {
+                const subtask = projectTasks.find(task => task.id === subtaskId);
+                return subtask && subtask.status === 'completed';
+            });
+            
+            if (allSubtasksCompleted && updates.progress < 100) {
+                // If all subtasks are completed but progress is less than 100, adjust it
+                projectTasks[taskIndex].progress = 100;
+            }
+        }
         
         // Update the project tasks
         this.projectTasks.set(projectId, projectTasks);
@@ -625,5 +659,308 @@ export class TaskManager {
         await this.saveTasks(projectId);
         
         return task;
+    }
+    
+    /**
+     * Delete a task by ID
+     * @param {number} id - Task ID to delete
+     * @param {string} projectId - Required project ID to delete a task from a specific project
+     * @param {boolean} reorganizeIds - Whether to reorganize task IDs after deletion
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @throws {TaskNotFoundError} If task is not found
+     * @returns {Promise<Object>} The deleted task
+     */
+    async deleteTask(id, projectId, reorganizeIds = false) {
+        if (!projectId) {
+            throw new ProjectNotFoundError('Project ID is required to delete a task');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
+        }
+        
+        // Validate task ID
+        if (!isValidTaskId(id)) {
+            throw new TaskValidationError(`Invalid task ID: ${id}`, {
+                field: 'id',
+                value: id
+            });
+        }
+        
+        // Initialize for the project
+        await this.init(projectId);
+        
+        // Get the tasks for this project
+        const projectTasks = this.projectTasks.get(projectId) || [];
+        
+        // Find the task to delete
+        const taskIndex = projectTasks.findIndex(task => task.id === id);
+        if (taskIndex === -1) {
+            throw new TaskNotFoundError(id, projectId);
+        }
+        
+        // Get the task before removing it
+        const deletedTask = { ...projectTasks[taskIndex] };
+        
+        // Check if this task has subtasks and delete them first
+        if (deletedTask.subtasks && deletedTask.subtasks.length > 0) {
+            // Create a copy of subtasks array to avoid modification during iteration
+            const subtaskIds = [...deletedTask.subtasks];
+            for (const subtaskId of subtaskIds) {
+                await this.deleteTask(subtaskId, projectId, false); // Don't reorganize IDs yet
+            }
+        }
+        
+        // Check if this task is a subtask and remove it from parent's subtasks array
+        const parentTaskId = this.subtaskParentMap.get(`${projectId}_${id}`);
+        if (parentTaskId) {
+            const parentTaskIndex = projectTasks.findIndex(task => task.id === parentTaskId);
+            if (parentTaskIndex !== -1 && projectTasks[parentTaskIndex].subtasks) {
+                projectTasks[parentTaskIndex].subtasks = projectTasks[parentTaskIndex].subtasks.filter(subtaskId => subtaskId !== id);
+            }
+            // Remove from subtask tracking map
+            this.subtaskParentMap.delete(`${projectId}_${id}`);
+        }
+        
+        // Remove the task
+        projectTasks.splice(taskIndex, 1);
+        
+        // Reorganize task IDs if requested
+        if (reorganizeIds) {
+            this.reorganizeTaskIds(projectTasks);
+        }
+        
+        // Update the project tasks
+        this.projectTasks.set(projectId, projectTasks);
+        
+        // Save tasks
+        await this.saveTasks(projectId);
+        
+        return deletedTask;
+    }
+    
+    /**
+     * Delete multiple tasks by criteria
+     * @param {Object} criteria - Criteria for selecting tasks to delete
+     * @param {string} projectId - Required project ID to delete tasks from a specific project
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @returns {Promise<Array>} The deleted tasks
+     */
+    async deleteTasks(criteria, projectId) {
+        if (!projectId) {
+            throw new ProjectNotFoundError('Project ID is required to delete tasks');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
+        }
+        
+        // Initialize for the project
+        await this.init(projectId);
+        
+        // Get the tasks for this project
+        const projectTasks = this.projectTasks.get(projectId) || [];
+        const deletedTasks = [];
+        
+        // Filter tasks to delete based on criteria
+        const tasksToDelete = [];
+        
+        // Handle different criteria
+        if (criteria.ids && Array.isArray(criteria.ids)) {
+            // Delete tasks by IDs
+            for (const id of criteria.ids) {
+                const taskIndex = projectTasks.findIndex(task => task.id === id);
+                if (taskIndex !== -1) {
+                    tasksToDelete.push(projectTasks[taskIndex]);
+                }
+            }
+        } else if (criteria.status) {
+            // Delete tasks by status
+            projectTasks.forEach(task => {
+                if (task.status === criteria.status) {
+                    tasksToDelete.push(task);
+                }
+            });
+        } else if (criteria.duplicates) {
+            // Find and delete duplicate tasks (same title and description)
+            const uniqueTasks = new Map();
+            projectTasks.forEach(task => {
+                const key = `${task.title}|${task.description}`;
+                if (uniqueTasks.has(key)) {
+                    tasksToDelete.push(task);
+                } else {
+                    uniqueTasks.set(key, task);
+                }
+            });
+        } else if (criteria.unqualified) {
+            // Delete tasks that don't meet quality criteria (e.g., missing required fields)
+            projectTasks.forEach(task => {
+                if (!task.title || !task.description || task.title.trim() === '' || task.description.trim() === '') {
+                    tasksToDelete.push(task);
+                }
+            });
+        }
+        
+        // Delete the tasks (in reverse order to avoid index issues)
+        for (const task of tasksToDelete) {
+            try {
+                const deletedTask = await this.deleteTask(task.id, projectId, false); // Don't reorganize IDs yet
+                deletedTasks.push(deletedTask);
+            } catch (error) {
+                logger.error(`Failed to delete task ${task.id}`, { error });
+            }
+        }
+        
+        // Reorganize task IDs after all deletions
+        if (deletedTasks.length > 0) {
+            const remainingTasks = this.projectTasks.get(projectId) || [];
+            this.reorganizeTaskIds(remainingTasks);
+            this.projectTasks.set(projectId, remainingTasks);
+            await this.saveTasks(projectId);
+        }
+        
+        return deletedTasks;
+    }
+    
+    /**
+     * Reorganize task IDs to ensure they are sequential
+     * @param {Array} tasks - Array of tasks to reorganize
+     * @private
+     */
+    reorganizeTaskIds(tasks) {
+        // Create a map of old IDs to new IDs
+        const idMap = new Map();
+        
+        // Sort tasks by ID to ensure proper ordering
+        tasks.sort((a, b) => a.id - b.id);
+        
+        // Assign new sequential IDs
+        tasks.forEach((task, index) => {
+            const oldId = task.id;
+            const newId = index + 1;
+            idMap.set(oldId, newId);
+            task.id = newId;
+        });
+        
+        // Update dependencies and subtasks references
+        tasks.forEach(task => {
+            if (task.dependencies && task.dependencies.length > 0) {
+                task.dependencies = task.dependencies.map(depId => idMap.get(depId) || depId);
+            }
+            
+            if (task.subtasks && task.subtasks.length > 0) {
+                task.subtasks = task.subtasks.map(subtaskId => idMap.get(subtaskId) || subtaskId);
+            }
+        });
+        
+        // Update subtask parent map
+        const updatedSubtaskParentMap = new Map();
+        for (const [key, parentId] of this.subtaskParentMap.entries()) {
+            const [projectId, oldSubtaskId] = key.split('_');
+            const newSubtaskId = idMap.get(Number(oldSubtaskId));
+            const newParentId = idMap.get(parentId);
+            
+            if (newSubtaskId && newParentId) {
+                updatedSubtaskParentMap.set(`${projectId}_${newSubtaskId}`, newParentId);
+            }
+        }
+        
+        this.subtaskParentMap = updatedSubtaskParentMap;
+    }
+    
+    /**
+     * Add a subtask to a parent task
+     * @param {Object} subtaskData - Subtask data
+     * @param {number} parentTaskId - Parent task ID
+     * @param {string} projectId - Required project ID
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @throws {TaskNotFoundError} If parent task is not found
+     * @returns {Promise<Object>} The created subtask
+     */
+    async addSubtask(subtaskData, parentTaskId, projectId) {
+        if (!projectId) {
+            throw new ProjectNotFoundError('Project ID is required to add a subtask');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
+        }
+        
+        // Validate parent task ID
+        if (!isValidTaskId(parentTaskId)) {
+            throw new TaskValidationError(`Invalid parent task ID: ${parentTaskId}`, {
+                field: 'parentTaskId',
+                value: parentTaskId
+            });
+        }
+        
+        // Initialize for the project
+        await this.init(projectId);
+        
+        // Get the tasks for this project
+        const projectTasks = this.projectTasks.get(projectId) || [];
+        
+        // Find the parent task
+        const parentTaskIndex = projectTasks.findIndex(task => task.id === parentTaskId);
+        if (parentTaskIndex === -1) {
+            throw new TaskNotFoundError(parentTaskId, projectId);
+        }
+        
+        // Create the subtask
+        const subtask = await this.createTask({
+            ...subtaskData,
+            priority: subtaskData.priority || projectTasks[parentTaskIndex].priority // Inherit priority from parent
+        }, projectId, parentTaskId);
+        
+        return subtask;
+    }
+    
+    /**
+     * Get all subtasks for a parent task
+     * @param {number} parentTaskId - Parent task ID
+     * @param {string} projectId - Required project ID
+     * @throws {ProjectNotFoundError} If project ID is not provided or invalid
+     * @throws {TaskNotFoundError} If parent task is not found
+     * @returns {Promise<Array>} The subtasks
+     */
+    async getSubtasks(parentTaskId, projectId) {
+        if (!projectId) {
+            throw new ProjectNotFoundError('Project ID is required to get subtasks');
+        }
+        
+        // Validate project ID to prevent path traversal attacks
+        if (!isValidProjectId(projectId)) {
+            throw new ProjectNotFoundError(`Invalid project ID format: ${projectId}`);
+        }
+        
+        // Validate parent task ID
+        if (!isValidTaskId(parentTaskId)) {
+            throw new TaskValidationError(`Invalid parent task ID: ${parentTaskId}`, {
+                field: 'parentTaskId',
+                value: parentTaskId
+            });
+        }
+        
+        // Initialize for the project
+        await this.init(projectId);
+        
+        // Get the tasks for this project
+        const projectTasks = this.projectTasks.get(projectId) || [];
+        
+        // Find the parent task
+        const parentTask = projectTasks.find(task => task.id === parentTaskId);
+        if (!parentTask) {
+            throw new TaskNotFoundError(parentTaskId, projectId);
+        }
+        
+        // Get the subtasks
+        if (!parentTask.subtasks || parentTask.subtasks.length === 0) {
+            return [];
+        }
+        
+        return projectTasks.filter(task => parentTask.subtasks.includes(task.id));
     }
 }

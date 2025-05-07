@@ -1,0 +1,247 @@
+[
+  {
+    "title": "Set up Next.js project structure for personal showcase website",
+    "description": "Initialize a Next.js project with proper folder structure, configuration, and dependencies for a personal showcase website that will include 3D maps, games, forex tools, and more.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:49:11.275Z",
+    "updatedAt": "2025-05-07T16:49:11.278Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Implement 3D maps and routes feature",
+    "description": "Create a 3D maps section that includes interactive maps, route planning, and 3D object visualization using Three.js and mapping APIs. Integrate the existing Bugis 3D map as a showcase example.",
+    "priority": "high",
+    "dependencies": [
+      1
+    ],
+    "id": 2,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:49:19.238Z",
+    "updatedAt": "2025-05-07T16:49:19.238Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Develop interactive games section",
+    "description": "Create a games section featuring chess, tic-tac-toe, sudoku, and other interactive games using React components and game libraries. Each game should have a consistent UI style and save user progress.",
+    "priority": "medium",
+    "dependencies": [
+      1
+    ],
+    "id": 3,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:49:27.042Z",
+    "updatedAt": "2025-05-07T16:49:27.042Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Build forex calculator and financial tools",
+    "description": "Develop a forex calculator, news feed integration, and sentiment prediction tools using financial APIs and data visualization libraries. Include real-time data where possible.",
+    "priority": "medium",
+    "dependencies": [
+      1
+    ],
+    "id": 4,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:49:35.435Z",
+    "updatedAt": "2025-05-07T16:49:35.435Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Project initialization and repository setup",
+    "description": "Initialize the Next.js project with TypeScript, set up the repository structure, configure linting and formatting tools, and create the basic project architecture. Include README documentation and development guidelines.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 5,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:50:54.084Z",
+    "updatedAt": "2025-05-07T16:50:54.084Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Create PRD (Product Requirements Document) for personal showcase website",
+    "description": "Create a comprehensive PRD document that outlines the MVP features, technical requirements, and development roadmap for the personal showcase website. This will serve as the foundation for all development tasks.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 6,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T16:53:08.121Z",
+    "updatedAt": "2025-05-07T16:54:13.529Z",
+    "projectId": "halict",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T16:53:14.566Z",
+    "completedAt": "2025-05-07T16:54:13.529Z"
+  },
+  {
+    "title": "Project initialization and Next.js setup",
+    "description": "Initialize the Next.js project with TypeScript, set up the project structure, configure essential dependencies, and create the base layout. This includes setting up Tailwind CSS, creating the folder structure, and implementing basic routing.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 7,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T16:54:21.432Z",
+    "updatedAt": "2025-05-07T17:04:14.482Z",
+    "projectId": "halict",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T16:56:20.664Z",
+    "completedAt": "2025-05-07T17:04:14.482Z"
+  },
+  {
+    "title": "Create responsive layout and navigation system",
+    "description": "Design and implement a responsive layout with header, footer, and main content areas. Create a navigation system that works on both desktop and mobile devices. Implement the homepage with featured content sections and basic styling using Tailwind CSS.",
+    "priority": "high",
+    "dependencies": [
+      7
+    ],
+    "id": 8,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T16:54:28.641Z",
+    "updatedAt": "2025-05-07T17:09:36.083Z",
+    "projectId": "halict",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T17:04:42.479Z",
+    "completedAt": "2025-05-07T17:09:36.083Z"
+  },
+  {
+    "title": "Implement 3D maps visualization component",
+    "description": "Develop the 3D maps visualization component using Three.js. Integrate the existing Bugis 3D map and enhance it with better controls, information overlays, and performance optimizations. Ensure it works responsively across different devices.",
+    "priority": "high",
+    "dependencies": [
+      8
+    ],
+    "id": 9,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:54:36.100Z",
+    "updatedAt": "2025-05-07T16:54:36.100Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Create routes visualization feature",
+    "description": "Develop the routes visualization feature that allows showing paths between locations on the 3D map. Implement route animation capabilities and integrate with mapping APIs for route data. Ensure smooth performance and visual appeal.",
+    "priority": "medium",
+    "dependencies": [
+      9
+    ],
+    "id": 10,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:54:44.302Z",
+    "updatedAt": "2025-05-07T16:54:44.302Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Build 3D objects gallery",
+    "description": "Create a gallery for showcasing various 3D models with interactive viewing capabilities. Implement controls for rotating, zooming, and exploring the models. Add information panels for each model and ensure optimal loading and performance.",
+    "priority": "medium",
+    "dependencies": [
+      8
+    ],
+    "id": 11,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:54:51.847Z",
+    "updatedAt": "2025-05-07T16:54:51.847Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Develop chess game with AI capabilities",
+    "description": "Create an interactive chess game with both multiplayer and AI opponent options. Implement game logic, board visualization, move validation, and basic AI for computer opponents. Ensure responsive design for play on different devices.",
+    "priority": "medium",
+    "dependencies": [
+      8
+    ],
+    "id": 12,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:54:59.243Z",
+    "updatedAt": "2025-05-07T16:54:59.243Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Implement tic-tac-toe and sudoku games",
+    "description": "Develop interactive tic-tac-toe and sudoku games with varying difficulty levels. For tic-tac-toe, include multiplayer capabilities. For sudoku, implement puzzle generation, validation, and difficulty settings. Create a unified interface for accessing both games.",
+    "priority": "medium",
+    "dependencies": [
+      8
+    ],
+    "id": 13,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:55:06.800Z",
+    "updatedAt": "2025-05-07T16:55:06.800Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Create forex calculator with real-time data",
+    "description": "Develop a forex calculator that provides real-time currency conversion rates. Implement historical rate charts, popular currency pair shortcuts, and an intuitive interface. Integrate with financial APIs to fetch current exchange rates and historical data.",
+    "priority": "medium",
+    "dependencies": [
+      8
+    ],
+    "id": 14,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:55:13.657Z",
+    "updatedAt": "2025-05-07T16:55:13.657Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Implement financial news feed and sentiment prediction",
+    "description": "Create a financial news feed that aggregates news from various sources, categorized by markets/regions. Implement search functionality and filtering options. Develop sentiment prediction visualizations with market sentiment indicators and historical trends. Integrate with news and financial APIs.",
+    "priority": "medium",
+    "dependencies": [
+      8
+    ],
+    "id": 15,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:55:21.009Z",
+    "updatedAt": "2025-05-07T16:55:21.009Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Testing, optimization, and deployment",
+    "description": "Conduct comprehensive testing across devices and browsers. Implement performance optimizations for 3D content and data-heavy features. Set up deployment pipeline with Vercel for the Next.js application. Configure CI/CD using GitHub Actions and implement basic analytics.",
+    "priority": "high",
+    "dependencies": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "id": 16,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:56:01.895Z",
+    "updatedAt": "2025-05-07T16:56:01.895Z",
+    "projectId": "halict"
+  },
+  {
+    "title": "Documentation and user guide",
+    "description": "Create comprehensive documentation for the project including setup instructions, architecture overview, and feature guides. Develop a user guide for visitors explaining how to use the various interactive features. Document APIs, data sources, and third-party integrations.",
+    "priority": "medium",
+    "dependencies": [
+      16
+    ],
+    "id": 17,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-07T16:56:08.962Z",
+    "updatedAt": "2025-05-07T16:56:08.962Z",
+    "projectId": "halict"
+  }
+]

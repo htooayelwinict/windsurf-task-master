@@ -1,0 +1,46 @@
+[
+  {
+    "title": "Analyze Google News scraper code",
+    "description": "Review the existing Google News scraper code to understand its functionality, identify potential issues, and determine areas for improvement.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-06T19:48:37.121Z",
+    "updatedAt": "2025-05-06T19:48:37.127Z",
+    "projectId": "google_news_scraper"
+  },
+  {
+    "title": "Analyze Google News scraper issues",
+    "description": "Analyze the current state of the Google News scraper and sentiment analyzer to identify any remaining issues after the timestamp fix.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 2,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-06T20:32:31.263Z",
+    "updatedAt": "2025-05-06T20:35:14.071Z",
+    "projectId": "google_news_scraper",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-06T20:33:21.621Z",
+    "completedAt": "2025-05-06T20:35:14.071Z"
+  },
+  {
+    "title": "Fix timestamp serialization and deserialization",
+    "description": "Address the timestamp handling issue in the data pipeline, ensuring proper serialization to JSON and correct parsing back into datetime objects when loaded for analysis.",
+    "priority": "high",
+    "dependencies": [
+      2
+    ],
+    "id": 3,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-06T20:33:37.562Z",
+    "updatedAt": "2025-05-06T20:58:40.866Z",
+    "projectId": "google_news_scraper",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-06T20:35:23.081Z",
+    "completedAt": "2025-05-06T20:58:40.866Z"
+  }
+]

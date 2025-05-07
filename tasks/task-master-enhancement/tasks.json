@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Implement Delete Tasks and Subtasks Tools",
+    "description": "Add new tools to the Windsurf Task Master: 1) A delete task tool for removing tasks and reorganizing task IDs, and 2) A subtask system for managing complex tasks with multiple subtasks.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T17:25:40.796Z",
+    "updatedAt": "2025-05-07T17:31:57.048Z",
+    "projectId": "task-master-enhancement",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T17:25:45.328Z",
+    "completedAt": "2025-05-07T17:31:57.048Z"
+  }
+]

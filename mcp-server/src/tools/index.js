@@ -6,6 +6,12 @@ import { registerCreateTaskTool } from './create-task.js';
 import { registerListTasksTool } from './list-tasks.js';
 import { registerUpdateTaskTool } from './update-task.js';
 import { registerCompleteTaskTool } from './complete-task.js';
+import { registerDeleteTaskTool } from './delete-task.js';
+import { registerDeleteTasksTool } from './delete-tasks.js';
+
+// Subtask management tools
+import { registerAddSubtaskTool } from './add-subtask.js';
+import { registerGetSubtasksTool } from './get-subtasks.js';
 
 // Windsurf integration tools
 import { registerAssignToWindsurfTool } from './assign-to-windsurf.js';
@@ -25,6 +31,12 @@ export function registerTaskTools(server, taskManager) {
         registerListTasksTool(server, taskManager);
         registerUpdateTaskTool(server, taskManager);
         registerCompleteTaskTool(server, taskManager);
+        registerDeleteTaskTool(server, taskManager);
+        registerDeleteTasksTool(server, taskManager);
+        
+        // Register subtask management tools
+        registerAddSubtaskTool(server, taskManager);
+        registerGetSubtasksTool(server, taskManager);
         
         // Register Windsurf integration tools
         registerAssignToWindsurfTool(server, taskManager);

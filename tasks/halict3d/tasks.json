@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Fix 3D building rendering in Bugis map",
+    "description": "Fix the 3D buildings in the Bugis map visualization that are currently rendering like grass (flat/incorrect). Need to use proper map tools to improve the visualization.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T16:30:38.804Z",
+    "updatedAt": "2025-05-07T16:34:53.922Z",
+    "projectId": "halict3d",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T16:30:44.556Z",
+    "completedAt": "2025-05-07T16:34:53.921Z"
+  }
+]

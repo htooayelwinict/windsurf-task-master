@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Analyze Windsurf Task Master Codebase",
+    "description": "Perform a deep analysis of the entire Windsurf Task Master codebase to understand its structure, functionality, and components.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T17:12:26.978Z",
+    "updatedAt": "2025-05-07T17:15:37.272Z",
+    "projectId": "codebase-analysis",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T17:12:31.660Z",
+    "completedAt": "2025-05-07T17:15:37.271Z"
+  }
+]
