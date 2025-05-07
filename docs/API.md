@@ -6,6 +6,7 @@ This document provides detailed information about the core components and utilit
 
 1. [Core Components](#core-components)
    - [TaskManager](#taskmanager)
+   - [TaskCleanupService](#taskcleanupservice)
    - [FileWatcher](#filewatcher)
 2. [Utilities](#utilities)
    - [Cache](#cache)
@@ -15,6 +16,7 @@ This document provides detailed information about the core components and utilit
 3. [Task Management](#task-management)
    - [Task Deletion](#task-deletion)
    - [Subtask Management](#subtask-management)
+   - [Task Cleanup](#task-cleanup)
 4. [Performance Optimization](#performance-optimization)
    - [Caching Strategy](#caching-strategy)
    - [Debouncing Strategy](#debouncing-strategy)
@@ -85,6 +87,57 @@ await taskManager.deleteTask(task.id, 'my-project', true);
 await taskManager.deleteTasks({
   status: 'completed'
 }, 'my-project');
+```
+
+### TaskCleanupService
+
+The `TaskCleanupService` class automatically maintains task quality and organization by performing cleanup operations after task completion.
+
+```mermaid
+sequenceDiagram
+    participant TM as TaskManager
+    participant TCS as TaskCleanupService
+    participant LLM as Windsurf LLM API
+    
+    Note over TM,TCS: Task reaches 100% completion
+    TM->>TCS: handleTaskCompletion(taskId, projectId, task)
+    TCS->>TCS: performCleanup(projectId)
+    TCS->>LLM: Detect similar tasks
+    LLM-->>TCS: Similarity groups
+    TCS->>TM: Update tasks
+```
+
+#### Key Methods
+
+| Method | Description | Parameters | Returns |
+|--------|-------------|------------|--------|
+| `constructor(taskManager)` | Initialize the Task Cleanup Service | `taskManager` (TaskManager): Instance of TaskManager | TaskCleanupService |
+| `registerHooks()` | Register hooks with the TaskManager | None | void |
+| `handleTaskCompletion(taskId, projectId, taskData)` | Handle task completion event | `taskId` (number): Task ID, `projectId` (string): Project ID, `taskData` (object): Task data | Promise<void> |
+| `performCleanup(projectId)` | Perform cleanup operations on a project | `projectId` (string): Project ID | Promise<Array> |
+| `ensureMetadataConsistency(tasks, projectId, config)` | Ensure metadata consistency across tasks | `tasks` (Array): List of tasks, `projectId` (string): Project ID, `config` (object): Cleanup configuration | Promise<Array> |
+| `handleOrphanedSubtasks(tasks, projectId, config)` | Handle orphaned subtasks | `tasks` (Array): List of tasks, `projectId` (string): Project ID, `config` (object): Cleanup configuration | Promise<Array> |
+| `enforceTaskQuality(tasks, projectId, config)` | Enforce task quality standards | `tasks` (Array): List of tasks, `projectId` (string): Project ID, `config` (object): Cleanup configuration | Promise<Array> |
+| `detectAndHandleDuplicates(tasks, projectId, config)` | Detect and handle duplicate tasks | `tasks` (Array): List of tasks, `projectId` (string): Project ID, `config` (object): Cleanup configuration | Promise<Array> |
+| `reorganizeTaskIds(projectId, config)` | Reorganize task IDs to maintain sequential ordering | `projectId` (string): Project ID, `config` (object): Cleanup configuration | Promise<Array> |
+
+#### Usage Example
+
+```javascript
+import { TaskManager } from '../core/task-manager.js';
+import TaskCleanupService from '../core/task-cleanup-service.js';
+
+// Create a task manager instance
+const taskManager = new TaskManager();
+
+// Initialize the task cleanup service
+const cleanupService = new TaskCleanupService(taskManager);
+
+// Register hooks
+cleanupService.registerHooks();
+
+// Manually trigger cleanup for a project
+await cleanupService.performCleanup('my-project');
 ```
 
 ### FileWatcher
@@ -242,6 +295,114 @@ File write operations are debounced to optimize performance:
 3. **Promise Queuing**: All requests within the debounce window receive the same result promise
 
 ## Task Management
+
+### Task Cleanup
+
+The Windsurf Task Master provides an intelligent Task Cleanup Service that automatically maintains task quality and organization:
+
+```mermaid
+flowchart TB
+    subgraph "Cleanup Triggers"
+        T1[Task Completion] --> Cleanup
+        T2[Progress = 100%] --> Cleanup
+    end
+    
+    subgraph "Cleanup Operations"
+        Cleanup[Task Cleanup Service] --> MD[Metadata Consistency]
+        Cleanup --> DD[Duplicate Detection]
+        Cleanup --> OS[Orphaned Subtask Handling]
+        Cleanup --> QE[Quality Enforcement]
+        Cleanup --> RI[Task ID Reorganization]
+    end
+    
+    DD <--> LLM[Windsurf LLM API]
+    
+    subgraph "Results"
+        MD --> R1[Fixed Timestamps]
+        DD --> R2[Merged Similar Tasks]
+        OS --> R3[Reassigned Subtasks]
+        QE --> R4[Improved Task Quality]
+        RI --> R5[Sequential Task IDs]
+    end
+```
+
+#### Cleanup Operations
+
+1. **Metadata Consistency**
+
+   Ensures that task metadata is consistent and accurate:
+   - Adds missing `completedAt` timestamps to completed tasks
+   - Ensures progress values match task status (e.g., 100% for completed tasks)
+   - Adds missing `assignedAt` timestamps to assigned tasks
+
+2. **Duplicate Detection**
+
+   Identifies and handles similar tasks:
+   - Uses Windsurf LLM API for semantic similarity detection
+   - Falls back to text-based similarity when LLM is unavailable
+   - Keeps the oldest task and deletes duplicates
+   - Transfers subtasks from duplicates to the kept task
+
+3. **Orphaned Subtask Handling**
+
+   Manages subtasks that have lost their parent tasks:
+   - Identifies subtasks with no valid parent reference
+   - Can delete, convert to regular tasks, or reassign to another parent
+   - Configurable action per project
+
+4. **Task Quality Enforcement**
+
+   Ensures tasks meet minimum quality standards:
+   - Validates minimum title and description lengths
+   - Checks for required fields like priority
+   - Can flag, fix, or delete low-quality tasks
+
+5. **Task ID Reorganization**
+
+   Maintains sequential task IDs after deletions:
+   - Renumbers tasks to maintain sequential ordering
+   - Updates references in dependencies and subtasks
+   - Can be triggered automatically after deletions
+
+#### Configuration
+
+The Task Cleanup Service is highly configurable through the `task-cleanup-config.js` file:
+
+```javascript
+// Example configuration
+export const taskCleanupConfig = {
+  enabled: true,
+  triggers: {
+    onTaskCompletion: true,
+    onTaskCompletionThreshold: 100
+  },
+  operations: {
+    detectDuplicates: {
+      enabled: true,
+      useLLM: true,
+      similarityThreshold: 0.85
+    },
+    metadataConsistency: {
+      enabled: true
+    },
+    orphanedSubtasks: {
+      enabled: true,
+      action: 'reassign'
+    },
+    qualityEnforcement: {
+      enabled: true,
+      minTitleLength: 5,
+      minDescriptionLength: 10,
+      action: 'flag'
+    },
+    reorganizeTaskIds: {
+      enabled: true
+    }
+  }
+};
+```
+
+For detailed documentation, see [Task Cleanup Service Documentation](./task-cleanup-service.md).
 
 ### Task Deletion
 

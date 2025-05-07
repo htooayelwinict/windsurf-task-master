@@ -15,6 +15,8 @@ A powerful MCP server for project-specific task management between Claude Deskto
 - **Comprehensive Task Management**: Create, update, list, complete, delete, and track progress of tasks
 - **Subtask Support**: Break down complex tasks into manageable subtasks with parent-child relationships
 - **Task Cleanup**: Remove duplicate or unqualified tasks and reorganize task IDs
+- **Automatic Task Maintenance**: Intelligent cleanup service that ensures task quality and organization
+- **LLM-Powered Similarity Detection**: Uses Windsurf LLM to identify and merge similar tasks
 - **High Performance**: Optimized with caching, debouncing, and indexing strategies
 - **Error Resilience**: Robust error handling and logging system
 
@@ -183,6 +185,31 @@ Manages task operations for project-specific task files:
 - **reorganizeTaskIds(tasks)**: Reorganize task IDs to maintain sequential ordering
 - **addSubtask(subtaskData, parentTaskId, projectId)**: Add a subtask to a parent task
 - **getSubtasks(parentTaskId, projectId)**: Get all subtasks for a parent task
+
+### TaskCleanupService
+
+Automatically maintains task quality and organization:
+
+```mermaid
+sequenceDiagram
+    participant TM as TaskManager
+    participant TCS as TaskCleanupService
+    participant LLM as Windsurf LLM API
+    
+    Note over TM,TCS: Task reaches 100% completion
+    TM->>TCS: handleTaskCompletion(taskId, projectId, task)
+    TCS->>TCS: performCleanup(projectId)
+    TCS->>LLM: Detect similar tasks
+    LLM-->>TCS: Similarity groups
+    TCS->>TM: Update tasks
+```
+
+- **Hooks into TaskManager operations**: Triggers cleanup after task completion
+- **Metadata Consistency**: Ensures all tasks have proper timestamps and status
+- **Duplicate Detection**: Uses Windsurf LLM to identify and merge similar tasks
+- **Orphaned Subtask Handling**: Reassigns or converts subtasks with missing parents
+- **Task Quality Enforcement**: Flags or fixes tasks with insufficient information
+- **Configurable Rules**: Customize cleanup behavior per project
 
 ### FileWatcher
 
@@ -405,11 +432,64 @@ For efficient task tracking with Windsurf, follow these rules:
 
 ## Performance Optimizations
 
-### Caching
+### Task Cleanup Service
 
-The system implements an in-memory caching mechanism to reduce file system operations:
+The Windsurf Task Master includes an intelligent Task Cleanup Service that automatically maintains task quality and organization:
 
-- **Task Data Caching**: Frequently accessed task data is cached in memory
+```mermaid
+flowchart TB
+    subgraph "Cleanup Triggers"
+        T1[Task Completion] --> Cleanup
+        T2[Progress = 100%] --> Cleanup
+    end
+    
+    subgraph "Cleanup Operations"
+        Cleanup[Task Cleanup Service] --> MD[Metadata Consistency]
+        Cleanup --> DD[Duplicate Detection]
+        Cleanup --> OS[Orphaned Subtask Handling]
+        Cleanup --> QE[Quality Enforcement]
+        Cleanup --> RI[Task ID Reorganization]
+    end
+    
+    DD <--> LLM[Windsurf LLM API]
+    
+    subgraph "Results"
+        MD --> R1[Fixed Timestamps]
+        DD --> R2[Merged Similar Tasks]
+        OS --> R3[Reassigned Subtasks]
+        QE --> R4[Improved Task Quality]
+        RI --> R5[Sequential Task IDs]
+    end
+```
+
+1. **Automatic Cleanup Triggers**:
+   - Runs when tasks reach 100% completion
+   - Maintains task quality without manual intervention
+   - Hooks into TaskManager operations for seamless integration
+
+2. **LLM-Powered Similarity Detection**:
+   - Uses Windsurf LLM API to identify semantically similar tasks
+   - Intelligently merges duplicate tasks while preserving subtasks
+   - Falls back to text-based similarity when LLM is unavailable
+   - Configurable similarity thresholds per project
+
+3. **Task Quality Maintenance**:
+   - Ensures metadata consistency (timestamps, progress values)
+   - Handles orphaned subtasks by reassigning or converting them
+   - Enforces minimum quality standards for task titles and descriptions
+
+4. **Configurable Rules**:
+   - Project-specific configuration options
+   - Customizable thresholds and actions
+   - Detailed logging of all cleanup operations
+   - Multiple action strategies (fix, flag, delete)
+
+For detailed documentation, see [Task Cleanup Service Documentation](./docs/task-cleanup-service.md)
+
+### Caching Strategy
+
+The Windsurf Task Master implements an in-memory caching system to reduce file system operations and improve performance. Task data is cached with configurable TTL (time-to-live) to ensure data freshness while minimizing I/O operations.
+
 - **TTL-based Expiration**: Cache entries expire after a configurable time period
 - **Size Limits**: Cache size is limited to prevent excessive memory usage
 

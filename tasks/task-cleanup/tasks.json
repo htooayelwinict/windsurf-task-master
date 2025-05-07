@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Clean up duplicate project tasks",
+    "description": "Identify and remove duplicate tasks across similar project IDs, reorganize task IDs, and consolidate projects where appropriate.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "in-progress",
+    "progress": 0,
+    "createdAt": "2025-05-07T17:53:27.415Z",
+    "updatedAt": "2025-05-07T17:53:31.646Z",
+    "projectId": "task-cleanup",
+    "subtasks": [],
+    "isSubtask": false,
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T17:53:31.646Z"
+  }
+]

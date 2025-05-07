@@ -1,76 +1,10 @@
 [
   {
-    "title": "Set up Next.js project structure for personal showcase website",
-    "description": "Initialize a Next.js project with proper folder structure, configuration, and dependencies for a personal showcase website that will include 3D maps, games, forex tools, and more.",
-    "priority": "high",
-    "dependencies": [],
-    "id": 1,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-07T16:49:11.275Z",
-    "updatedAt": "2025-05-07T16:49:11.278Z",
-    "projectId": "halict"
-  },
-  {
-    "title": "Implement 3D maps and routes feature",
-    "description": "Create a 3D maps section that includes interactive maps, route planning, and 3D object visualization using Three.js and mapping APIs. Integrate the existing Bugis 3D map as a showcase example.",
-    "priority": "high",
-    "dependencies": [
-      1
-    ],
-    "id": 2,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-07T16:49:19.238Z",
-    "updatedAt": "2025-05-07T16:49:19.238Z",
-    "projectId": "halict"
-  },
-  {
-    "title": "Develop interactive games section",
-    "description": "Create a games section featuring chess, tic-tac-toe, sudoku, and other interactive games using React components and game libraries. Each game should have a consistent UI style and save user progress.",
-    "priority": "medium",
-    "dependencies": [
-      1
-    ],
-    "id": 3,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-07T16:49:27.042Z",
-    "updatedAt": "2025-05-07T16:49:27.042Z",
-    "projectId": "halict"
-  },
-  {
-    "title": "Build forex calculator and financial tools",
-    "description": "Develop a forex calculator, news feed integration, and sentiment prediction tools using financial APIs and data visualization libraries. Include real-time data where possible.",
-    "priority": "medium",
-    "dependencies": [
-      1
-    ],
-    "id": 4,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-07T16:49:35.435Z",
-    "updatedAt": "2025-05-07T16:49:35.435Z",
-    "projectId": "halict"
-  },
-  {
-    "title": "Project initialization and repository setup",
-    "description": "Initialize the Next.js project with TypeScript, set up the repository structure, configure linting and formatting tools, and create the basic project architecture. Include README documentation and development guidelines.",
-    "priority": "high",
-    "dependencies": [],
-    "id": 5,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-07T16:50:54.084Z",
-    "updatedAt": "2025-05-07T16:50:54.084Z",
-    "projectId": "halict"
-  },
-  {
     "title": "Create PRD (Product Requirements Document) for personal showcase website",
     "description": "Create a comprehensive PRD document that outlines the MVP features, technical requirements, and development roadmap for the personal showcase website. This will serve as the foundation for all development tasks.",
     "priority": "high",
     "dependencies": [],
-    "id": 6,
+    "id": 1,
     "status": "completed",
     "progress": 100,
     "createdAt": "2025-05-07T16:53:08.121Z",
@@ -85,7 +19,7 @@
     "description": "Initialize the Next.js project with TypeScript, set up the project structure, configure essential dependencies, and create the base layout. This includes setting up Tailwind CSS, creating the folder structure, and implementing basic routing.",
     "priority": "high",
     "dependencies": [],
-    "id": 7,
+    "id": 2,
     "status": "completed",
     "progress": 100,
     "createdAt": "2025-05-07T16:54:21.432Z",
@@ -100,9 +34,9 @@
     "description": "Design and implement a responsive layout with header, footer, and main content areas. Create a navigation system that works on both desktop and mobile devices. Implement the homepage with featured content sections and basic styling using Tailwind CSS.",
     "priority": "high",
     "dependencies": [
-      7
+      2
     ],
-    "id": 8,
+    "id": 3,
     "status": "completed",
     "progress": 100,
     "createdAt": "2025-05-07T16:54:28.641Z",
@@ -117,23 +51,31 @@
     "description": "Develop the 3D maps visualization component using Three.js. Integrate the existing Bugis 3D map and enhance it with better controls, information overlays, and performance optimizations. Ensure it works responsively across different devices.",
     "priority": "high",
     "dependencies": [
-      8
+      3
     ],
-    "id": 9,
-    "status": "pending",
+    "id": 4,
+    "status": "in-progress",
     "progress": 0,
     "createdAt": "2025-05-07T16:54:36.100Z",
-    "updatedAt": "2025-05-07T16:54:36.100Z",
-    "projectId": "halict"
+    "updatedAt": "2025-05-07T19:10:25.387Z",
+    "projectId": "halict",
+    "subtasks": [
+      17,
+      19,
+      20,
+      22,
+      23,
+      24
+    ]
   },
   {
     "title": "Create routes visualization feature",
     "description": "Develop the routes visualization feature that allows showing paths between locations on the 3D map. Implement route animation capabilities and integrate with mapping APIs for route data. Ensure smooth performance and visual appeal.",
     "priority": "medium",
     "dependencies": [
-      9
+      4
     ],
-    "id": 10,
+    "id": 5,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:54:44.302Z",
@@ -145,9 +87,9 @@
     "description": "Create a gallery for showcasing various 3D models with interactive viewing capabilities. Implement controls for rotating, zooming, and exploring the models. Add information panels for each model and ensure optimal loading and performance.",
     "priority": "medium",
     "dependencies": [
-      8
+      3
     ],
-    "id": 11,
+    "id": 6,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:54:51.847Z",
@@ -159,23 +101,27 @@
     "description": "Create an interactive chess game with both multiplayer and AI opponent options. Implement game logic, board visualization, move validation, and basic AI for computer opponents. Ensure responsive design for play on different devices.",
     "priority": "medium",
     "dependencies": [
-      8
+      3
     ],
-    "id": 12,
-    "status": "pending",
+    "id": 7,
+    "status": "in-progress",
     "progress": 0,
     "createdAt": "2025-05-07T16:54:59.243Z",
-    "updatedAt": "2025-05-07T16:54:59.243Z",
-    "projectId": "halict"
+    "updatedAt": "2025-05-07T19:10:30.171Z",
+    "projectId": "halict",
+    "subtasks": [
+      18,
+      21
+    ]
   },
   {
     "title": "Implement tic-tac-toe and sudoku games",
     "description": "Develop interactive tic-tac-toe and sudoku games with varying difficulty levels. For tic-tac-toe, include multiplayer capabilities. For sudoku, implement puzzle generation, validation, and difficulty settings. Create a unified interface for accessing both games.",
     "priority": "medium",
     "dependencies": [
-      8
+      3
     ],
-    "id": 13,
+    "id": 8,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:55:06.800Z",
@@ -187,9 +133,9 @@
     "description": "Develop a forex calculator that provides real-time currency conversion rates. Implement historical rate charts, popular currency pair shortcuts, and an intuitive interface. Integrate with financial APIs to fetch current exchange rates and historical data.",
     "priority": "medium",
     "dependencies": [
-      8
+      3
     ],
-    "id": 14,
+    "id": 9,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:55:13.657Z",
@@ -201,9 +147,9 @@
     "description": "Create a financial news feed that aggregates news from various sources, categorized by markets/regions. Implement search functionality and filtering options. Develop sentiment prediction visualizations with market sentiment indicators and historical trends. Integrate with news and financial APIs.",
     "priority": "medium",
     "dependencies": [
-      8
+      3
     ],
-    "id": 15,
+    "id": 10,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:55:21.009Z",
@@ -215,15 +161,15 @@
     "description": "Conduct comprehensive testing across devices and browsers. Implement performance optimizations for 3D content and data-heavy features. Set up deployment pipeline with Vercel for the Next.js application. Configure CI/CD using GitHub Actions and implement basic analytics.",
     "priority": "high",
     "dependencies": [
+      4,
+      5,
+      6,
+      7,
+      8,
       9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15
+      10
     ],
-    "id": 16,
+    "id": 11,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:56:01.895Z",
@@ -235,13 +181,183 @@
     "description": "Create comprehensive documentation for the project including setup instructions, architecture overview, and feature guides. Develop a user guide for visitors explaining how to use the various interactive features. Document APIs, data sources, and third-party integrations.",
     "priority": "medium",
     "dependencies": [
-      16
+      11
     ],
-    "id": 17,
+    "id": 12,
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:56:08.962Z",
     "updatedAt": "2025-05-07T16:56:08.962Z",
     "projectId": "halict"
+  },
+  {
+    "title": "Test and run the Halict Next.js application",
+    "description": "Run the Next.js development server, verify the application loads correctly, and test basic functionality of the existing components.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 13,
+    "status": "completed",
+    "progress": 50,
+    "createdAt": "2025-05-07T18:25:23.726Z",
+    "updatedAt": "2025-05-07T18:30:27.776Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": false,
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-07T18:25:27.445Z"
+  },
+  {
+    "title": "Fix UI duplication issue in Bugis 3D Map page",
+    "description": "The Bugis 3D Map page currently shows duplicated content (header, navigation, and map description). Need to identify and fix the cause of this duplication to ensure proper rendering.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 14,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T18:31:17.323Z",
+    "updatedAt": "2025-05-07T18:41:11.950Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": false
+  },
+  {
+    "title": "Implement proper Three.js integration for Bugis 3D Map",
+    "description": "Replace the current iframe-based approach with a direct Three.js implementation in the Next.js application for the Bugis 3D Map. This will provide better performance, maintainability, and integration with the rest of the application. The implementation should include:\n1. Proper Three.js scene setup with OrbitControls\n2. 3D models of key Bugis landmarks\n3. Interactive elements for exploring the map\n4. Responsive design that works well on different devices\n5. Optimized performance for smooth user experience",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 15,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T18:37:42.562Z",
+    "updatedAt": "2025-05-07T18:59:47.620Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": false
+  },
+  {
+    "title": "Implement Chess Game with AI Capabilities",
+    "description": "Create an interactive chess game with AI opponent capabilities for the Games section of the Halict showcase website. The implementation should include a visual chessboard, piece movement validation, game state tracking, and a simple AI opponent.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 16,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:00:35.755Z",
+    "updatedAt": "2025-05-07T19:07:29.823Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": false
+  },
+  {
+    "title": "Enhance Bugis Map with Google Maps data",
+    "description": "Use Google Maps API to get more precise location data for streets and buildings in the Bugis area. Add Fortune Center to the map. Improve the realism of the 3D visualization with accurate geographical data.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 17,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:10:36.239Z",
+    "updatedAt": "2025-05-07T19:13:52.056Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Fix Chess Game self-playing issue",
+    "description": "Fix the issue where the chess game rejects user moves and plays by itself. Ensure proper turn management and player interaction in the chess game.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 18,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:10:41.738Z",
+    "updatedAt": "2025-05-07T19:13:57.363Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Fix Bugis Map object positioning and UI layout",
+    "description": "Fix the issue where all 3D objects in the Bugis map are loaded in one place and the landmark buttons are disoriented. Ensure proper positioning of landmarks and improve the UI layout.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 19,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:17:49.552Z",
+    "updatedAt": "2025-05-07T19:19:10.223Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Improve Bugis Map landmark positioning with accurate Google Maps data",
+    "description": "Fix the issue where all landmarks appear in one place by implementing a better coordinate system with accurate Google Maps data. Remove the unused bugis.html file from public/3D_MAPS directory.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 20,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:25:33.098Z",
+    "updatedAt": "2025-05-07T19:27:43.108Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Fix Chess Game move handling and self-playing issue",
+    "description": "Fix the issue where the chess game plays by itself after the user makes a move. Ensure proper move handling, turn management, and game state tracking.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 21,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:25:41.466Z",
+    "updatedAt": "2025-05-07T19:27:50.932Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Resize Bugis Map buildings and streets using accurate Google Maps measurements",
+    "description": "Fix the issue where buildings are still too close together and streets are too small by using accurate measurements from Google Maps. Implement proper scaling ratios for buildings and streets based on real-world dimensions.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 22,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:35:05.171Z",
+    "updatedAt": "2025-05-07T19:37:24.075Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Further enhance Bugis Map with proper ground size, road adjustments, and Guanyin Temple",
+    "description": "Improve the Bugis map by adjusting the ground size to match the scale of buildings, fix road placements to align with buildings, and add the Guanyin Temple (Kwan Im Thong Hood Cho Temple) near Bugis Street.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 23,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:42:01.952Z",
+    "updatedAt": "2025-05-07T19:43:52.766Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Add detailed road network with traffic patterns to Bugis Map",
+    "description": "Further enhance the Bugis map by adding a more comprehensive road network with traffic patterns, smaller connecting streets, and accurate road layouts based on detailed Google Maps data.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 24,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-07T19:46:45.659Z",
+    "updatedAt": "2025-05-07T19:48:32.484Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
   }
 ]
