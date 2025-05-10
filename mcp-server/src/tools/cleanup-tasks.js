@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { createErrorHandler } from '../utils/errors.js';
 import { isValidProjectId } from '../utils/security.js';
 import { logger } from '../utils/logger.js';
+import { getProjectConfig } from '../config/task-cleanup-config.js';
 
 /**
  * Register a tool to clean up tasks in a project
@@ -42,7 +43,7 @@ export function registerCleanupTasksTool(server, taskManager) {
                 }
                 
                 // Get the project configuration
-                const config = taskCleanupService.getProjectConfig(args.projectId);
+                const config = getProjectConfig(args.projectId);
                 
                 // Override config with user-specified operations if provided
                 if (args.operations) {
@@ -53,8 +54,13 @@ export function registerCleanupTasksTool(server, taskManager) {
                     config.operations.qualityEnforcement.enabled = args.operations.enforceQuality;
                 }
                 
+                // Apply the config to the TaskCleanupService
+                // Note: The TaskCleanupService will get its own config internally,
+                // we just need to override the operations based on user input
+                taskCleanupService._config = config;
+                
                 // Perform the cleanup
-                const results = await taskCleanupService.performCleanup(args.projectId, config);
+                const results = await taskCleanupService.performCleanup(args.projectId);
                 
                 // Format the results for display
                 const formattedResults = formatCleanupResults(results);

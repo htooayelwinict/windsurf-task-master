@@ -17,6 +17,7 @@ class TaskCleanupService {
   constructor(taskManager) {
     this.taskManager = taskManager;
     this.hookRegistered = false;
+    this._config = null; // Store custom config for override
   }
 
   /**
@@ -83,7 +84,11 @@ class TaskCleanupService {
    * @param {string} projectId - Project identifier
    */
   async performCleanup(projectId) {
-    const config = getProjectConfig(projectId);
+    // Use the override config if available, otherwise get the default config
+    const config = this._config || getProjectConfig(projectId);
+    // Reset the override config after using it
+    this._config = null;
+    
     const tasks = await this.taskManager.listTasks(projectId);
     
     if (!tasks || tasks.length === 0) {

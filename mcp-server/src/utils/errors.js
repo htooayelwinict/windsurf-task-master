@@ -168,20 +168,23 @@ export function logError(error, context = {}) {
 // Error handler middleware for MCP tools
 export function createErrorHandler(toolName) {
     return async (error, args = {}) => {
+        // Log the error with detailed information for debugging
         const errorLog = logError(error, {
             tool: toolName,
             args: JSON.stringify(args)
         });
 
+        // Include error details in the console for debugging
+        console.error(`Error in ${toolName}:`, JSON.stringify(errorLog));
+
+        // Only return the content field in the response to comply with MCP protocol
         return {
             content: [{
                 type: 'text',
                 text: error instanceof TaskMasterError
                     ? `Error in ${toolName}: ${error.message}`
                     : `Unexpected error in ${toolName}: ${error.message}`
-            }],
-            isError: true,
-            errorDetails: errorLog
+            }]
         };
     };
 }

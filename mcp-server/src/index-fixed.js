@@ -19,11 +19,7 @@ import {
     resetErrorCount
 } from './utils/error-recovery.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-    enforceStderrLogging,
-    createSafeJsonRpcWriter,
-    enforceJsonOnlyStdout
-} from './utils/stdout-stderr-separation.js';
+import { patchStdoutForDebugging } from './debug-stdout-patch.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,22 +29,10 @@ const __dirname = path.dirname(__filename);
  */
 class MessageHandler {
     constructor() {
-        // Ensure all logging goes to stderr from the start
-        enforceStderrLogging();
-        
-        // Enforce strict JSON-only stdout
-        enforceJsonOnlyStdout();
-        
-        process.stderr.write('[INFO] Initializing custom message handler for MCP server\n');
+        logger.info('Initializing custom message handler for MCP server');
         
         // Set up process error handlers
         this.setupErrorHandlers();
-        
-        // Create safe JSON-RPC writer
-        this.jsonRpcWriter = createSafeJsonRpcWriter();
-        
-        // Reset error count on startup
-        resetErrorCount();
     }
     
     /**
@@ -81,8 +65,12 @@ class MessageHandler {
      */
     sendMessage(message) {
         try {
-            // Use the safe JSON-RPC writer
-            this.jsonRpcWriter(message);
+            const jsonString = safeStringifyJson(message);
+            logger.debug(`Sending message: ${jsonString.substring(0, 100)}...`);
+            
+            // Ensure the message ends with exactly one newline
+            const messageToWrite = jsonString.endsWith('\n') ? jsonString : jsonString + '\n';
+            process.stdout.write(messageToWrite);
             
             // Reset error count on successful send
             resetErrorCount();
@@ -95,7 +83,8 @@ class MessageHandler {
             const errorResponse = handleCommunicationError(error, requestId);
             if (errorResponse) {
                 try {
-                    this.jsonRpcWriter(JSON.parse(errorResponse));
+                    const errorToWrite = errorResponse.endsWith('\n') ? errorResponse : errorResponse + '\n';
+                    process.stdout.write(errorToWrite);
                 } catch (writeError) {
                     logger.error(`Failed to write error response: ${writeError.message}`);
                 }
@@ -160,13 +149,46 @@ class MessageHandler {
             const errorResponse = handleCommunicationError(error, requestId);
             if (errorResponse) {
                 try {
-                    this.jsonRpcWriter(JSON.parse(errorResponse));
+                    const errorToWrite = errorResponse.endsWith('\n') ? errorResponse : errorResponse + '\n';
+                    process.stdout.write(errorToWrite);
                 } catch (sendError) {
                     logger.error(`Failed to send error response: ${sendError.message}`);
                 }
             }
             return false;
         }
+    }
+    
+    /**
+     * Intercept and process MCP messages
+     * @param {Function} originalSend - The original send function to wrap
+     * @returns {Function} - The wrapped send function
+     */
+    interceptSend(originalSend) {
+        return async (message) => {
+            try {
+                // Use our safe JSON stringification
+                const jsonString = safeStringifyJson(message);
+                logger.debug(`Intercepted outgoing message: ${jsonString.substring(0, 100)}...`);
+                
+                // Call the original send function with the original message
+                // This preserves the original object structure
+                await originalSend(message);
+                
+                // Reset error count on successful send
+                resetErrorCount();
+            } catch (error) {
+                logger.error(`Error in intercepted send: ${error.message}`);
+                console.error(`Error in intercepted send: ${error.message}`);
+                
+                // Handle communication error
+                const requestId = message.id || 0;
+                handleCommunicationError(error, requestId);
+                
+                // Re-throw the error to allow the original error handling to proceed
+                throw error;
+            }
+        };
     }
 }
 
@@ -176,9 +198,6 @@ class MessageHandler {
 class WindsurfTaskMCPServer {
     constructor() {
         try {
-            // First, ensure all logging goes to stderr
-            enforceStderrLogging();
-            
             // Get version from package.json
             const packagePath = path.join(__dirname, '../../package.json');
             const packageContent = fs.readFileSync(packagePath, 'utf8');
@@ -208,8 +227,8 @@ class WindsurfTaskMCPServer {
             // Create message handler
             this.messageHandler = new MessageHandler();
             
-            // Enforce JSON-only stdout
-            enforceJsonOnlyStdout();
+            // Enable debugging
+            patchStdoutForDebugging();
         } catch (error) {
             console.error(`Error initializing MCP server: ${error.message}`);
             logger.error('Error initializing MCP server:', error);
@@ -251,8 +270,41 @@ class WindsurfTaskMCPServer {
             }
         });
         
-        // Note: We don't need to monkey-patch stdout.write anymore
-        // The enforceJsonOnlyStdout() already handles this
+        // Monkey patch the stdout.write method to intercept outgoing messages
+        const originalStdoutWrite = process.stdout.write;
+        process.stdout.write = function(data, ...args) {
+            try {
+                const dataStr = data.toString();
+                console.error(`[STDOUT-INTERCEPT] Raw data being written: ${JSON.stringify(dataStr)}`);
+                
+                // Check if it's valid JSON (could be object, array, string, number, boolean, or null)
+                let isValidJson = false;
+                let parsedJson = null;
+                
+                try {
+                    parsedJson = JSON.parse(dataStr.trim());
+                    isValidJson = true;
+                } catch (e) {
+                    // Not valid JSON, might be part of a larger message
+                    console.error(`[STDOUT-INTERCEPT] Not valid JSON: ${e.message}`);
+                }
+                
+                if (isValidJson && parsedJson !== undefined) {
+                    // It's valid JSON, ensure proper formatting
+                    const safeMessage = safeStringifyJson(parsedJson);
+                    const messageToWrite = safeMessage.endsWith('\n') ? safeMessage : safeMessage + '\n';
+                    console.error(`[STDOUT-INTERCEPT] Writing formatted JSON: ${JSON.stringify(messageToWrite)}`);
+                    return originalStdoutWrite.call(this, messageToWrite, ...args);
+                } else {
+                    // Not JSON or failed to parse, pass through as-is
+                    console.error(`[STDOUT-INTERCEPT] Passing through non-JSON data`);
+                    return originalStdoutWrite.call(this, data, ...args);
+                }
+            } catch (error) {
+                console.error(`[STDOUT-INTERCEPT] Error: ${error.message}`);
+                return originalStdoutWrite.call(this, data, ...args);
+            }
+        };
     }
 
     /**

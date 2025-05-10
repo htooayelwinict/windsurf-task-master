@@ -17,7 +17,7 @@ import {
 import {
     handleCommunicationError,
     resetErrorCount
-} from './utils/error-recovery.js';
+} from './utils/error-recovery-fixed.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
     enforceStderrLogging,
@@ -36,19 +36,13 @@ class MessageHandler {
         // Ensure all logging goes to stderr from the start
         enforceStderrLogging();
         
-        // Enforce strict JSON-only stdout
-        enforceJsonOnlyStdout();
-        
-        process.stderr.write('[INFO] Initializing custom message handler for MCP server\n');
+        logger.info('Initializing custom message handler for MCP server');
         
         // Set up process error handlers
         this.setupErrorHandlers();
         
         // Create safe JSON-RPC writer
         this.jsonRpcWriter = createSafeJsonRpcWriter();
-        
-        // Reset error count on startup
-        resetErrorCount();
     }
     
     /**

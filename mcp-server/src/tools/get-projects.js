@@ -20,7 +20,7 @@ export function registerGetProjectsTool(server, taskManager) {
         parameters: z.object({
             projectId: z.string().optional().describe('Optional project ID to filter by')
         }),
-        execute: async () => {
+        execute: async (params) => {
             try {
                 console.error('Executing get_projects tool');
                 logger.info('Retrieving projects list');
@@ -28,20 +28,33 @@ export function registerGetProjectsTool(server, taskManager) {
                 // Get projects from task manager
                 const projects = await taskManager.getProjects();
                 
-                console.error(`Found ${projects.length} projects: ${projects.join(', ')}`);
-                logger.info(`Found ${projects.length} projects`);
+                // Filter by projectId if provided
+                let filteredProjects = projects;
+                if (params && params.projectId) {
+                    filteredProjects = projects.filter(id => id === params.projectId);
+                    logger.info(`Filtered projects by ID: ${params.projectId}`);
+                }
                 
-                return {
+                console.error(`Found ${filteredProjects.length} projects: ${filteredProjects.join(', ')}`);
+                logger.info(`Found ${filteredProjects.length} projects`);
+                
+                // Create a clean response object with proper structure
+                const response = {
                     content: [{
                         type: 'text',
-                        text: projects.length > 0
-                            ? `Available projects:\n${projects.join('\n')}`
+                        text: filteredProjects.length > 0
+                            ? `Available projects:\n${filteredProjects.join('\n')}`
                             : 'No projects found'
                     }]
                 };
+                
+                // Return the response directly without any additional processing
+                return response;
             } catch (error) {
                 console.error(`Error in get_projects: ${error.message}`);
                 logger.error('Error in get_projects:', error);
+                
+                // Create a clean error response
                 return {
                     content: [{
                         type: 'text',

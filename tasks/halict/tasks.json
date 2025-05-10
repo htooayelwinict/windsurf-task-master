@@ -95,8 +95,11 @@
     "status": "pending",
     "progress": 0,
     "createdAt": "2025-05-07T16:54:51.847Z",
-    "updatedAt": "2025-05-07T16:54:51.847Z",
-    "projectId": "halict"
+    "updatedAt": "2025-05-10T00:19:56.458Z",
+    "projectId": "halict",
+    "subtasks": [
+      23
+    ]
   },
   {
     "title": "Develop chess game with AI capabilities",
@@ -126,14 +129,15 @@
     ],
     "id": 8,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T16:55:06.800Z",
-    "updatedAt": "2025-05-09T18:27:13.151Z",
+    "updatedAt": "2025-05-10T00:19:51.442Z",
     "projectId": "halict",
     "subtasks": [
       24,
       25
-    ]
+    ],
+    "completedAt": "2025-05-09T18:27:13.151Z"
   },
   {
     "title": "Create forex calculator with real-time data",
@@ -358,12 +362,13 @@
     "dependencies": [],
     "id": 23,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-09T18:08:41.463Z",
-    "updatedAt": "2025-05-09T18:09:12.040Z",
+    "updatedAt": "2025-05-10T00:19:52.444Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T18:09:12.040Z"
   },
   {
     "title": "Implement Tic-Tac-Toe game",
@@ -372,12 +377,13 @@
     "dependencies": [],
     "id": 24,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-09T18:22:21.405Z",
-    "updatedAt": "2025-05-09T18:27:02.856Z",
+    "updatedAt": "2025-05-10T00:19:53.447Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T18:27:02.856Z"
   },
   {
     "title": "Implement Sudoku game",
@@ -386,12 +392,13 @@
     "dependencies": [],
     "id": 25,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-09T18:22:26.853Z",
-    "updatedAt": "2025-05-09T18:27:08.576Z",
+    "updatedAt": "2025-05-10T00:19:54.450Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T18:27:08.576Z"
   },
   {
     "title": "Enhance UI/UX with modern interactive elements",
@@ -452,5 +459,106 @@
     "projectId": "halict",
     "subtasks": [],
     "isSubtask": true
+  },
+  {
+    "title": "Add Interactive Buttons with 3-Second Effects",
+    "description": "Create and implement buttons with animated effects that last for 3 seconds, integrated with the existing theme system.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 30,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-10T00:18:37.353Z",
+    "updatedAt": "2025-05-10T00:18:37.353Z",
+    "projectId": "halict",
+    "subtasks": [
+      31,
+      32
+    ],
+    "isSubtask": false
+  },
+  {
+    "title": "Create AnimatedButton Component",
+    "description": "Implement a new AnimatedButton component with 3-second visual effects and theme integration.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 31,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-10T00:18:46.300Z",
+    "updatedAt": "2025-05-10T00:20:02.660Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true,
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-10T00:19:43.774Z",
+    "completedAt": "2025-05-10T00:20:02.659Z"
+  },
+  {
+    "title": "Add Animated Buttons to Landing Page",
+    "description": "Integrate the AnimatedButton component into the landing page with appropriate actions and styling.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 32,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-10T00:21:08.101Z",
+    "updatedAt": "2025-05-10T00:21:50.799Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true,
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-10T00:21:38.768Z",
+    "completedAt": "2025-05-10T00:21:50.799Z"
+  },
+  {
+    "title": "Fix Missing Tailwind-Merge Dependency",
+    "description": "Install missing tailwind-merge package and verify AnimatedButton component functionality.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 33,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-10T00:24:15.987Z",
+    "updatedAt": "2025-05-10T00:29:07.327Z",
+    "projectId": "halict",
+    "subtasks": [
+      34
+    ],
+    "isSubtask": false,
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-10T00:24:22.245Z",
+    "completedAt": "2025-05-10T00:29:07.327Z"
+  },
+  {
+    "title": "Fix Client Component Event Handler Error",
+    "description": "Convert page components to use client-side interactivity properly by adding 'use client' directive and restructuring component hierarchy.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 34,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-10T00:27:36.196Z",
+    "updatedAt": "2025-05-10T00:28:54.676Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true,
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-10T00:28:43.056Z",
+    "completedAt": "2025-05-10T00:28:54.676Z"
+  },
+  {
+    "title": "Update Project Name",
+    "description": "Update the project name across all files and configurations to ensure consistency.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 35,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-10T00:31:52.607Z",
+    "updatedAt": "2025-05-10T00:31:52.608Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": false
   }
 ]
