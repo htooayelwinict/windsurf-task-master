@@ -1,0 +1,92 @@
+[
+  {
+    "title": "Fix Memory MCP Server Issues",
+    "description": "Fix the issues in the memory MCP server index.ts file and set it up for local running with npx command to work with the user's Windsurf configuration.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T20:07:05.962Z",
+    "updatedAt": "2025-05-09T20:13:05.587Z",
+    "projectId": "memory-mcp-fix",
+    "subtasks": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "isSubtask": false
+  },
+  {
+    "title": "Implement missing methods in KnowledgeGraphManager",
+    "description": "Implement the missing deleteEntities and deleteObservations methods in the KnowledgeGraphManager class.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 2,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T20:07:13.441Z",
+    "updatedAt": "2025-05-09T20:08:58.612Z",
+    "projectId": "memory-mcp-fix",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Fix type property handling in loadGraph method",
+    "description": "Fix the loadGraph method to properly handle the type property when parsing entities and relations from the file.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 3,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T20:07:21.230Z",
+    "updatedAt": "2025-05-09T20:09:04.249Z",
+    "projectId": "memory-mcp-fix",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Improve error handling in JSON parsing",
+    "description": "Enhance the loadGraph method to handle invalid JSON gracefully, skipping invalid lines instead of failing the entire operation.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 4,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T20:07:28.639Z",
+    "updatedAt": "2025-05-09T20:09:10.551Z",
+    "projectId": "memory-mcp-fix",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Fix server initialization syntax",
+    "description": "Fix the unusual comma placement in the Server constructor call that might cause syntax errors.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 5,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T20:07:33.551Z",
+    "updatedAt": "2025-05-09T20:09:15.826Z",
+    "projectId": "memory-mcp-fix",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Set up for local run with npx command",
+    "description": "Configure the project to run locally using npx command to work with the user's Windsurf configuration.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 6,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T20:07:39.561Z",
+    "updatedAt": "2025-05-09T20:11:48.877Z",
+    "projectId": "memory-mcp-fix",
+    "subtasks": [],
+    "isSubtask": true
+  }
+]

@@ -3,11 +3,11 @@
  * 
  * Automatically cleans up tasks based on configured rules.
  * Runs as a hook after task operations to maintain a clean task structure.
+ * Can also be invoked directly via the cleanup_tasks MCP tool.
  */
 
 import { getProjectConfig } from '../config/task-cleanup-config.js';
 import { logger } from '../utils/logger.js';
-import axios from 'axios';
 
 class TaskCleanupService {
   /**
@@ -17,8 +17,6 @@ class TaskCleanupService {
   constructor(taskManager) {
     this.taskManager = taskManager;
     this.hookRegistered = false;
-    this.llmApiEndpoint = process.env.WINDSURF_LLM_API_ENDPOINT || 'http://localhost:3001/api/similarity';
-    this.llmApiKey = process.env.WINDSURF_LLM_API_KEY;
   }
 
   /**
@@ -482,58 +480,8 @@ class TaskCleanupService {
    * @returns {Array} - Groups of similar tasks
    */
   async findSimilarTasks(tasks, config) {
-    if (config.useLLM && this.llmApiKey) {
-      return this.findSimilarTasksWithLLM(tasks, config);
-    } else {
-      return this.findSimilarTasksWithTextSimilarity(tasks, config);
-    }
-  }
-
-  /**
-   * Find similar tasks using Windsurf LLM API
-   * @param {Array} tasks - List of tasks to compare
-   * @param {Object} config - Duplicate detection configuration
-   * @returns {Array} - Groups of similar tasks
-   */
-  async findSimilarTasksWithLLM(tasks, config) {
-    try {
-      // Prepare task texts for comparison
-      const taskTexts = tasks.map(task => {
-        let text = '';
-        
-        if (config.considerTitle && task.title) {
-          text += task.title;
-        }
-        
-        if (config.considerDescription && task.description) {
-          text += ' ' + task.description;
-        }
-        
-        return text;
-      });
-      
-      // Call Windsurf LLM API for similarity detection
-      const response = await axios.post(this.llmApiEndpoint, {
-        texts: taskTexts,
-        threshold: config.similarityThreshold,
-        apiKey: this.llmApiKey
-      });
-      
-      if (!response.data || !response.data.similarityGroups) {
-        logger.error('Task Cleanup Service: Invalid response from LLM API');
-        return [];
-      }
-      
-      // Convert group indices to actual task objects
-      return response.data.similarityGroups.map(group => 
-        group.map(index => tasks[index])
-      );
-    } catch (error) {
-      logger.error(`Task Cleanup Service: Error using LLM for similarity detection: ${error.message}`, { error });
-      
-      // Fall back to text similarity
-      return this.findSimilarTasksWithTextSimilarity(tasks, config);
-    }
+    // Always use local text similarity since we removed external API dependency
+    return this.findSimilarTasksWithTextSimilarity(tasks, config);
   }
 
   /**

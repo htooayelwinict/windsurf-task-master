@@ -19,6 +19,10 @@ import { registerUpdateWindsurfProgressTool } from './update-windsurf-progress.j
 import { registerGetWindsurfTasksTool } from './get-windsurf-tasks.js';
 import { registerDisplayTaskStatusTool } from './display-task-status.js';
 
+// Task maintenance tools
+import { registerCleanupTasksTool } from './cleanup-tasks.js';
+import { registerGetProjectsTool } from './get-projects.js';
+
 /**
  * Register all task management tools with the MCP server
  * @param {Object} server - FastMCP server instance
@@ -43,6 +47,18 @@ export function registerTaskTools(server, taskManager) {
         registerUpdateWindsurfProgressTool(server, taskManager);
         registerGetWindsurfTasksTool(server, taskManager);
         registerDisplayTaskStatusTool(server, taskManager);
+        
+        // Register task maintenance tools
+        registerCleanupTasksTool(server, taskManager);
+        
+        // Add explicit logging for get_projects tool registration
+        console.error('About to register get_projects tool');
+        try {
+            registerGetProjectsTool(server, taskManager);
+            console.error('Successfully registered get_projects tool');
+        } catch (error) {
+            console.error(`Error registering get_projects tool: ${error.message}`);
+        }
 
         console.error('All task management tools registered successfully');
     } catch (error) {
@@ -52,5 +68,6 @@ export function registerTaskTools(server, taskManager) {
 }
 
 export default {
-    registerTaskTools
+    registerTaskTools,
+    registerGetProjectsTool
 };

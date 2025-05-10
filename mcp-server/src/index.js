@@ -32,6 +32,9 @@ class WindsurfTaskMCPServer {
         this.taskManager = new TaskManager();
         this.fileWatcher = new FileWatcher(this.taskManager);
         this.taskCleanupService = new TaskCleanupService(this.taskManager);
+        
+        // Make the cleanup service accessible from the task manager
+        this.taskManager.taskCleanupService = this.taskCleanupService;
     }
 
     /**

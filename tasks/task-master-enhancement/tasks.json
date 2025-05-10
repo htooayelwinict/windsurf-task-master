@@ -46,5 +46,19 @@
     "assignedTo": "windsurf",
     "assignedAt": "2025-05-07T18:11:12.664Z",
     "completedAt": "2025-05-07T18:11:21.435Z"
+  },
+  {
+    "title": "Implement and Debug Get Projects Tool",
+    "description": "Create a new get_projects tool to replace the old list-project-ids tool. Implement the necessary TaskManager method and ensure proper MCP integration.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 4,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T16:45:16.736Z",
+    "updatedAt": "2025-05-09T16:54:54.859Z",
+    "projectId": "task-master-enhancement",
+    "subtasks": [],
+    "isSubtask": false
   }
 ]

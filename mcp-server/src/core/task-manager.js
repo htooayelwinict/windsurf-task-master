@@ -12,6 +12,7 @@ import {
 import { taskCache } from '../utils/cache.js';
 import { debouncer } from '../utils/debounce.js';
 import { logger } from '../utils/logger.js';
+import TaskCleanupService from './task-cleanup-service.js';
 import { 
     isValidProjectId, 
     isValidTaskId, 
@@ -46,6 +47,10 @@ export class TaskManager {
         this.initialized = false;
         this.windsurfTasks = new Map(); // Track tasks assigned to Windsurf
         this.currentProject = null; // Current active project
+        
+        // Initialize the TaskCleanupService
+        this.taskCleanupService = new TaskCleanupService(this);
+        this.taskCleanupService.registerHooks();
         
         // Task indices for faster lookups
         this.taskIndices = new Map(); // Map of project IDs to task indices
@@ -926,6 +931,44 @@ export class TaskManager {
      * @throws {TaskNotFoundError} If parent task is not found
      * @returns {Promise<Array>} The subtasks
      */
+    /**
+     * Get all available projects in the task manager
+     * @returns {Promise<Array<string>>} Array of project IDs
+     * @throws {FileSystemError} If there's an error accessing the file system
+     */
+    async getProjects() {
+        try {
+            // Ensure the base tasks directory exists
+            await fs.mkdir(this.baseTasksDir, { recursive: true });
+            
+            // Read all project directories
+            const projectDirs = await fs.readdir(this.baseTasksDir);
+            
+            // Filter out non-directory items and get project IDs
+            const projectIds = [];
+            for (const dir of projectDirs) {
+                const fullPath = path.join(this.baseTasksDir, dir);
+                const stats = await fs.stat(fullPath);
+                if (stats.isDirectory()) {
+                    // Verify it's a valid project directory by checking for tasks.json
+                    const tasksFile = path.join(fullPath, 'tasks.json');
+                    try {
+                        await fs.access(tasksFile);
+                        projectIds.push(dir);
+                    } catch (error) {
+                        logger.debug(`Skipping invalid project directory: ${dir}`);
+                    }
+                }
+            }
+            
+            // Sort project IDs alphabetically
+            return projectIds.sort();
+        } catch (error) {
+            logger.error('Error getting projects:', error);
+            throw new FileSystemError('Failed to get projects list', error);
+        }
+    }
+
     async getSubtasks(parentTaskId, projectId) {
         if (!projectId) {
             throw new ProjectNotFoundError('Project ID is required to get subtasks');

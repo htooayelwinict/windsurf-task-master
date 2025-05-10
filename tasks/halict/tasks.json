@@ -48,39 +48,41 @@
   },
   {
     "title": "Implement 3D maps visualization component",
-    "description": "Develop the 3D maps visualization component using Three.js. Integrate the existing Bugis 3D map and enhance it with better controls, information overlays, and performance optimizations. Ensure it works responsively across different devices.",
+    "description": "Complete implementation of the Bugis 3D Map with Three.js integration, Google Maps data, and proper object positioning",
     "priority": "high",
     "dependencies": [
       3
     ],
     "id": 4,
-    "status": "in-progress",
-    "progress": 0,
+    "status": "completed",
+    "progress": 100,
     "createdAt": "2025-05-07T16:54:36.100Z",
-    "updatedAt": "2025-05-07T19:10:25.387Z",
+    "updatedAt": "2025-05-09T18:05:30.523Z",
     "projectId": "halict",
     "subtasks": [
-      17,
+      16,
+      18,
       19,
       20,
-      22,
-      23,
-      24
-    ]
+      21,
+      22
+    ],
+    "completedAt": "2025-05-09T15:11:51.525Z"
   },
   {
     "title": "Create routes visualization feature",
-    "description": "Develop the routes visualization feature that allows showing paths between locations on the 3D map. Implement route animation capabilities and integrate with mapping APIs for route data. Ensure smooth performance and visual appeal.",
+    "description": "Implemented route visualization from Bugis to City Hall using Three.js. Created a dedicated BugisRouteViewer component that displays an interactive 3D route with waypoints, distance information, and estimated walking time. Added a new routes section to the 3D visualizations with a dedicated page for the Bugis to City Hall route.",
     "priority": "medium",
     "dependencies": [
       4
     ],
     "id": 5,
-    "status": "pending",
-    "progress": 0,
+    "status": "completed",
+    "progress": 100,
     "createdAt": "2025-05-07T16:54:44.302Z",
-    "updatedAt": "2025-05-07T16:54:44.302Z",
-    "projectId": "halict"
+    "updatedAt": "2025-05-09T18:05:31.527Z",
+    "projectId": "halict",
+    "completedAt": "2025-05-09T18:01:02.704Z"
   },
   {
     "title": "Build 3D objects gallery",
@@ -98,21 +100,22 @@
   },
   {
     "title": "Develop chess game with AI capabilities",
-    "description": "Create an interactive chess game with both multiplayer and AI opponent options. Implement game logic, board visualization, move validation, and basic AI for computer opponents. Ensure responsive design for play on different devices.",
+    "description": "Implement a fully functional chess game with AI opponent capabilities, including different difficulty levels, game controls, and responsive design.",
     "priority": "medium",
     "dependencies": [
       3
     ],
     "id": 7,
-    "status": "in-progress",
-    "progress": 0,
+    "status": "completed",
+    "progress": 100,
     "createdAt": "2025-05-07T16:54:59.243Z",
-    "updatedAt": "2025-05-07T19:10:30.171Z",
+    "updatedAt": "2025-05-09T18:05:32.530Z",
     "projectId": "halict",
     "subtasks": [
-      18,
-      21
-    ]
+      17,
+      20
+    ],
+    "completedAt": "2025-05-09T15:03:22.612Z"
   },
   {
     "title": "Implement tic-tac-toe and sudoku games",
@@ -122,11 +125,15 @@
       3
     ],
     "id": 8,
-    "status": "pending",
+    "status": "completed",
     "progress": 0,
     "createdAt": "2025-05-07T16:55:06.800Z",
-    "updatedAt": "2025-05-07T16:55:06.800Z",
-    "projectId": "halict"
+    "updatedAt": "2025-05-09T18:27:13.151Z",
+    "projectId": "halict",
+    "subtasks": [
+      24,
+      25
+    ]
   },
   {
     "title": "Create forex calculator with real-time data",
@@ -197,14 +204,15 @@
     "dependencies": [],
     "id": 13,
     "status": "completed",
-    "progress": 50,
+    "progress": 100,
     "createdAt": "2025-05-07T18:25:23.726Z",
-    "updatedAt": "2025-05-07T18:30:27.776Z",
+    "updatedAt": "2025-05-09T18:05:33.531Z",
     "projectId": "halict",
     "subtasks": [],
     "isSubtask": false,
     "assignedTo": "windsurf",
-    "assignedAt": "2025-05-07T18:25:27.445Z"
+    "assignedAt": "2025-05-07T18:25:27.445Z",
+    "completedAt": "2025-05-09T15:11:40.647Z"
   },
   {
     "title": "Fix UI duplication issue in Bugis 3D Map page",
@@ -213,12 +221,13 @@
     "dependencies": [],
     "id": 14,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T18:31:17.323Z",
-    "updatedAt": "2025-05-07T18:41:11.950Z",
+    "updatedAt": "2025-05-09T18:05:34.533Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": false
+    "isSubtask": false,
+    "completedAt": "2025-05-09T15:04:29.293Z"
   },
   {
     "title": "Implement proper Three.js integration for Bugis 3D Map",
@@ -227,135 +236,219 @@
     "dependencies": [],
     "id": 15,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T18:37:42.562Z",
-    "updatedAt": "2025-05-07T18:59:47.620Z",
+    "updatedAt": "2025-05-09T18:05:35.535Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": false
-  },
-  {
-    "title": "Implement Chess Game with AI Capabilities",
-    "description": "Create an interactive chess game with AI opponent capabilities for the Games section of the Halict showcase website. The implementation should include a visual chessboard, piece movement validation, game state tracking, and a simple AI opponent.",
-    "priority": "medium",
-    "dependencies": [],
-    "id": 16,
-    "status": "completed",
-    "progress": 0,
-    "createdAt": "2025-05-07T19:00:35.755Z",
-    "updatedAt": "2025-05-07T19:07:29.823Z",
-    "projectId": "halict",
-    "subtasks": [],
-    "isSubtask": false
+    "isSubtask": false,
+    "completedAt": "2025-05-09T15:04:37.454Z"
   },
   {
     "title": "Enhance Bugis Map with Google Maps data",
     "description": "Use Google Maps API to get more precise location data for streets and buildings in the Bugis area. Add Fortune Center to the map. Improve the realism of the 3D visualization with accurate geographical data.",
     "priority": "high",
     "dependencies": [],
-    "id": 17,
+    "id": 16,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T19:10:36.239Z",
-    "updatedAt": "2025-05-07T19:13:52.056Z",
+    "updatedAt": "2025-05-09T18:05:36.538Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:03:30.085Z"
   },
   {
-    "title": "Fix Chess Game self-playing issue",
-    "description": "Fix the issue where the chess game rejects user moves and plays by itself. Ensure proper turn management and player interaction in the chess game.",
+    "title": "Fix Chess Game self-playing and move handling issues",
+    "description": "Comprehensive fix for the chess game's self-playing issue and move handling problems to ensure proper game mechanics and player interaction.",
     "priority": "high",
     "dependencies": [],
-    "id": 18,
+    "id": 17,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T19:10:41.738Z",
-    "updatedAt": "2025-05-07T19:13:57.363Z",
+    "updatedAt": "2025-05-09T18:05:37.540Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:09:54.531Z"
   },
   {
     "title": "Fix Bugis Map object positioning and UI layout",
     "description": "Fix the issue where all 3D objects in the Bugis map are loaded in one place and the landmark buttons are disoriented. Ensure proper positioning of landmarks and improve the UI layout.",
     "priority": "high",
     "dependencies": [],
-    "id": 19,
+    "id": 18,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T19:17:49.552Z",
-    "updatedAt": "2025-05-07T19:19:10.223Z",
+    "updatedAt": "2025-05-09T18:05:38.542Z",
     "projectId": "halict",
-    "subtasks": [],
-    "isSubtask": true
+    "subtasks": [
+      23
+    ],
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:03:36.329Z"
   },
   {
     "title": "Improve Bugis Map landmark positioning with accurate Google Maps data",
     "description": "Fix the issue where all landmarks appear in one place by implementing a better coordinate system with accurate Google Maps data. Remove the unused bugis.html file from public/3D_MAPS directory.",
     "priority": "high",
     "dependencies": [],
-    "id": 20,
+    "id": 19,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T19:25:33.098Z",
-    "updatedAt": "2025-05-07T19:27:43.108Z",
+    "updatedAt": "2025-05-09T18:05:39.545Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
-  },
-  {
-    "title": "Fix Chess Game move handling and self-playing issue",
-    "description": "Fix the issue where the chess game plays by itself after the user makes a move. Ensure proper move handling, turn management, and game state tracking.",
-    "priority": "high",
-    "dependencies": [],
-    "id": 21,
-    "status": "completed",
-    "progress": 0,
-    "createdAt": "2025-05-07T19:25:41.466Z",
-    "updatedAt": "2025-05-07T19:27:50.932Z",
-    "projectId": "halict",
-    "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:03:43.520Z"
   },
   {
     "title": "Resize Bugis Map buildings and streets using accurate Google Maps measurements",
     "description": "Fix the issue where buildings are still too close together and streets are too small by using accurate measurements from Google Maps. Implement proper scaling ratios for buildings and streets based on real-world dimensions.",
     "priority": "high",
     "dependencies": [],
-    "id": 22,
+    "id": 20,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T19:35:05.171Z",
-    "updatedAt": "2025-05-07T19:37:24.075Z",
+    "updatedAt": "2025-05-09T18:05:40.550Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:03:49.688Z"
   },
   {
     "title": "Further enhance Bugis Map with proper ground size, road adjustments, and Guanyin Temple",
     "description": "Improve the Bugis map by adjusting the ground size to match the scale of buildings, fix road placements to align with buildings, and add the Guanyin Temple (Kwan Im Thong Hood Cho Temple) near Bugis Street.",
     "priority": "high",
     "dependencies": [],
-    "id": 23,
+    "id": 21,
     "status": "completed",
-    "progress": 0,
+    "progress": 100,
     "createdAt": "2025-05-07T19:42:01.952Z",
-    "updatedAt": "2025-05-07T19:43:52.766Z",
+    "updatedAt": "2025-05-09T18:05:41.552Z",
     "projectId": "halict",
     "subtasks": [],
-    "isSubtask": true
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:03:56.190Z"
   },
   {
     "title": "Add detailed road network with traffic patterns to Bugis Map",
     "description": "Further enhance the Bugis map by adding a more comprehensive road network with traffic patterns, smaller connecting streets, and accurate road layouts based on detailed Google Maps data.",
     "priority": "high",
     "dependencies": [],
+    "id": 22,
+    "status": "completed",
+    "progress": 100,
+    "createdAt": "2025-05-07T19:46:45.659Z",
+    "updatedAt": "2025-05-09T18:05:42.555Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true,
+    "completedAt": "2025-05-09T15:04:02.466Z"
+  },
+  {
+    "title": "Fix BugisMapViewer GPS coordinate scaling",
+    "description": "Fix the object positioning in the BugisMapViewer component by properly scaling GPS coordinates to scene coordinates. The issue was that the scale factor was too large, causing objects to be positioned incorrectly.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 23,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T18:08:41.463Z",
+    "updatedAt": "2025-05-09T18:09:12.040Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Implement Tic-Tac-Toe game",
+    "description": "Create a Tic-Tac-Toe game component with the following features:\n1. 3x3 game board with interactive cells\n2. Game logic for moves, win conditions, and draw detection\n3. AI opponent with multiple difficulty levels\n4. Game status tracking and display\n5. Controls for resetting the game and changing difficulty",
+    "priority": "medium",
+    "dependencies": [],
     "id": 24,
     "status": "completed",
     "progress": 0,
-    "createdAt": "2025-05-07T19:46:45.659Z",
-    "updatedAt": "2025-05-07T19:48:32.484Z",
+    "createdAt": "2025-05-09T18:22:21.405Z",
+    "updatedAt": "2025-05-09T18:27:02.856Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Implement Sudoku game",
+    "description": "Create a Sudoku game component with the following features:\n1. 9x9 grid with 3x3 subgrids for the puzzle\n2. Puzzle generation with multiple difficulty levels\n3. Input validation and error highlighting\n4. Hint system to help players\n5. Game status tracking and completion detection\n6. Controls for starting new games and selecting difficulty",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 25,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-09T18:22:26.853Z",
+    "updatedAt": "2025-05-09T18:27:08.576Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Enhance UI/UX with modern interactive elements",
+    "description": "Improve the website's user interface and experience by adding more icons, interactive elements, and modern themes while ensuring compatibility with the existing codebase.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 26,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-09T18:35:00.489Z",
+    "updatedAt": "2025-05-09T18:35:00.489Z",
+    "projectId": "halict",
+    "subtasks": [
+      27,
+      28,
+      29
+    ],
+    "isSubtask": false
+  },
+  {
+    "title": "Add icon library and implement icons throughout the UI",
+    "description": "Integrate a modern icon library (like React Icons or Heroicons) and replace text-based buttons and indicators with appropriate icons to enhance visual appeal and usability.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 27,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-09T18:35:06.978Z",
+    "updatedAt": "2025-05-09T18:35:06.978Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Implement theme switching and enhanced color schemes",
+    "description": "Create a theme switcher component and enhance the existing color schemes with more vibrant and modern palettes, ensuring proper contrast and accessibility.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 28,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-09T18:35:12.714Z",
+    "updatedAt": "2025-05-09T18:35:12.714Z",
+    "projectId": "halict",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Add interactive animations and transitions",
+    "description": "Implement subtle animations and transitions for UI elements to create a more dynamic and engaging user experience, focusing on page transitions, hover effects, and interactive feedback.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 29,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-05-09T18:35:18.749Z",
+    "updatedAt": "2025-05-09T18:35:18.749Z",
     "projectId": "halict",
     "subtasks": [],
     "isSubtask": true

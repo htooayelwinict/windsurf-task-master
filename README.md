@@ -22,6 +22,65 @@ A powerful MCP server for project-specific task management between Claude Deskto
 
 ## System Architecture
 
+The Windsurf Task Master follows a modular architecture with the following key components:
+
+### Core Components
+
+1. **WindsurfTaskMaster (System)**
+   - Core MCP server for project-specific task management
+   - Version tracked in package.json
+   - Uses FastMCP with stdio transport
+   - Manages tasks across multiple projects
+   - Implements file-based storage with real-time monitoring
+
+2. **TaskManager (Core Component)**
+   - Central component for task CRUD operations
+   - Maintains project isolation
+   - Implements debounced file operations
+   - Handles task indexing for efficient lookups
+   - Manages parent-child task relationships
+
+3. **TaskCleanupService (Service)**
+   - Handles task cleanup operations
+   - Detects and merges duplicate tasks
+   - Ensures metadata consistency
+   - Reorganizes task IDs
+   - Project-specific configuration support
+
+4. **FileWatcher (Service)**
+   - Monitors task files for changes
+   - Provides real-time updates
+   - Handles file system events
+   - Ensures data consistency
+
+5. **TaskTools (MCP Tools)**
+   - Collection of MCP tools for task management
+   - Includes CRUD operations
+   - Handles task assignments
+   - Manages project operations
+   - Implements cleanup functionality
+
+6. **TaskStorage (Storage)**
+   - File-based JSON storage
+   - Project-specific task files
+   - Maintains data integrity
+   - Implements caching for performance
+   - Handles concurrent access
+
+### Component Relationships
+
+```mermaid
+graph TD
+    WTM[WindsurfTaskMaster] -->|manages| TM[TaskManager]
+    WTM -->|exposes| TT[TaskTools]
+    TM -->|uses| TCS[TaskCleanupService]
+    TM -->|coordinates with| FW[FileWatcher]
+    TM -->|persists data through| TS[TaskStorage]
+    TT -->|interfaces with| TM
+    FW -->|monitors| TS
+    TCS -->|maintains| TS
+```
+
 ```mermaid
 flowchart LR
     Claude[Claude Desktop] <-->|MCP Tools| Server[Task Master Server]
