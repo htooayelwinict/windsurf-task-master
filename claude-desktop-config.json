@@ -2,7 +2,7 @@
   "mcpServers": {
     "windsurf-task-master": {
       "command": "node",
-      "args": ["/Users/lewisae/Documents/VSCode/windsurf-task-master/mcp-server/server.js"],
+      "args": ["mcp-server/server.js"],
       "env": {}
     }
   }
