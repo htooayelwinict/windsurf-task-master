@@ -1,22 +1,15 @@
 /**
- * Fixed error recovery utilities for the Windsurf Task Master MCP server
- * Provides mechanisms to recover from communication errors without runaway counts
+ * Error recovery utilities for the Windsurf Task Master MCP server
+ * Provides mechanisms to recover from communication errors
  */
 
 import { logger } from './logger.js';
-import { createJsonRpcErrorResponse } from './message-handler.js';
 
 /**
  * Maximum number of consecutive errors before forcing a restart
  * @type {number}
  */
 const MAX_CONSECUTIVE_ERRORS = 5;
-
-/**
- * Hard cap on error count to prevent runaway situations
- * @type {number}
- */
-const ERROR_COUNT_HARD_CAP = 100;
 
 /**
  * Counter for consecutive errors
@@ -31,12 +24,6 @@ let consecutiveErrorCount = 0;
 let lastErrorTimestamp = 0;
 
 /**
- * Error pattern detection - if we get too many errors in rapid succession, something is wrong
- * @type {Map<string, number>}
- */
-const errorPatterns = new Map();
-
-/**
  * Handle a communication error and attempt recovery
  * @param {Error} error - The error that occurred
  * @param {number|string} requestId - The ID of the request that caused the error
@@ -44,68 +31,46 @@ const errorPatterns = new Map();
  */
 export function handleCommunicationError(error, requestId = 0) {
     const now = Date.now();
-    const errorType = error.constructor.name;
     
-    // Hard cap on error count to prevent runaway
-    if (consecutiveErrorCount > ERROR_COUNT_HARD_CAP) {
-        process.stderr.write(`[ERROR] Error count exceeded safe limit (${consecutiveErrorCount}). Resetting to prevent runaway.\n`);
-        consecutiveErrorCount = 0;
-        errorPatterns.clear();
-    }
-    
-    // Update error pattern tracking with safe limits
-    const patternKey = `${errorType}:${error.message.substring(0, 50)}`;
-    const patternCount = Math.min((errorPatterns.get(patternKey) || 0) + 1, ERROR_COUNT_HARD_CAP);
-    errorPatterns.set(patternKey, patternCount);
-    
-    // Clean up old error patterns (older than 5 seconds)
+    // Clean up old errors (older than 5 seconds)
     if (now - lastErrorTimestamp > 5000) {
-        process.stderr.write(`[INFO] Resetting error patterns due to time gap (${(now - lastErrorTimestamp)/1000}s)\n`);
-        errorPatterns.clear();
+        logger.info(`Resetting error count due to time gap (${(now - lastErrorTimestamp)/1000}s)`);
         consecutiveErrorCount = 0;
     }
     
     // Update timestamp
     lastErrorTimestamp = now;
     
-    // Check for error pattern loops
-    if (patternCount > 10) {
-        process.stderr.write(`[ERROR] Error pattern detected: ${patternKey} occurred ${patternCount} times\n`);
-        // Reset this pattern to prevent runaway
-        errorPatterns.set(patternKey, 0);
-    }
+    // Increment error count
+    consecutiveErrorCount++;
     
-    // Increment with a hard cap to prevent runaway
-    consecutiveErrorCount = Math.min(consecutiveErrorCount + 1, ERROR_COUNT_HARD_CAP);
+    // Log to stderr
+    logger.error(`Communication error: ${error.message}`);
     
-    lastErrorTimestamp = now;
-    
-    // Log to stderr, not stdout
-    process.stderr.write(`[ERROR] Communication error: ${error.message}\n`);
-    
-    // Log warning to stderr only
+    // Log warning if approaching threshold
     if (consecutiveErrorCount > 1) {
-        process.stderr.write(`[WARN] Approaching error threshold (${consecutiveErrorCount}/${MAX_CONSECUTIVE_ERRORS})\n`);
+        logger.warn(`Approaching error threshold (${consecutiveErrorCount}/${MAX_CONSECUTIVE_ERRORS})`);
     }
     
     // Check if we need to force a restart
     if (consecutiveErrorCount >= MAX_CONSECUTIVE_ERRORS) {
-        process.stderr.write(`[ERROR] Error threshold reached (${consecutiveErrorCount}/${MAX_CONSECUTIVE_ERRORS}). Server should be restarted.\n`);
-        // In a production environment, we might want to trigger an automatic restart here
+        logger.error(`Error threshold reached (${consecutiveErrorCount}/${MAX_CONSECUTIVE_ERRORS}). Server should be restarted.`);
         // Reset the counter to prevent infinite loops
         consecutiveErrorCount = 0;
-        errorPatterns.clear();
     }
     
-    // Create an error response
+    // Create a simple error response
     try {
-        return createJsonRpcErrorResponse(
-            requestId,
-            -32603,
-            `Internal error: ${error.message}`
-        );
+        return JSON.stringify({
+            jsonrpc: '2.0',
+            id: requestId,
+            error: {
+                code: -32603,
+                message: `Internal error: ${error.message}`
+            }
+        }) + '\n';
     } catch (responseError) {
-        process.stderr.write(`[ERROR] Failed to create error response: ${responseError.message}\n`);
+        logger.error(`Failed to create error response: ${responseError.message}`);
         return null;
     }
 }
@@ -115,12 +80,9 @@ export function handleCommunicationError(error, requestId = 0) {
  */
 export function resetErrorCount() {
     if (consecutiveErrorCount > 0) {
-        process.stderr.write(`[INFO] Resetting error count from ${consecutiveErrorCount} to 0\n`);
+        logger.info(`Resetting error count from ${consecutiveErrorCount} to 0`);
         consecutiveErrorCount = 0;
     }
-    
-    // Also clear error patterns on successful communication
-    errorPatterns.clear();
     
     // Update timestamp to prevent false resets
     lastErrorTimestamp = Date.now();
@@ -134,29 +96,10 @@ export function getErrorCount() {
     return consecutiveErrorCount;
 }
 
-/**
- * Get error pattern statistics
- * @returns {Object} - Statistics about error patterns
- */
-export function getErrorPatternStats() {
-    const stats = {
-        totalPatterns: errorPatterns.size,
-        patterns: []
-    };
-    
-    errorPatterns.forEach((count, pattern) => {
-        stats.patterns.push({ pattern, count });
-    });
-    
-    // Sort by count descending
-    stats.patterns.sort((a, b) => b.count - a.count);
-    
-    return stats;
-}
+
 
 export default {
     handleCommunicationError,
     resetErrorCount,
-    getErrorCount,
-    getErrorPatternStats
+    getErrorCount
 };
