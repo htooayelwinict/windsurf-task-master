@@ -1,0 +1,77 @@
+[
+  {
+    "title": "Implement Process Management and Log Rotation",
+    "description": "Implement comprehensive process management and log rotation for the Windsurf Task Master MCP server to address high CPU usage and excessive log file growth issues.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-10T20:06:08.559Z",
+    "updatedAt": "2025-05-10T20:06:56.466Z",
+    "projectId": "mcp-server-maintenance",
+    "subtasks": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "isSubtask": false
+  },
+  {
+    "title": "Process Manager Implementation",
+    "description": "Implement a process manager script to monitor and manage Node.js processes related to the MCP server, identify zombie processes, clean up runaway processes, and handle duplicate processes.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 2,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-10T20:06:13.955Z",
+    "updatedAt": "2025-05-10T20:06:37.629Z",
+    "projectId": "mcp-server-maintenance",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Server Starter Implementation",
+    "description": "Implement a server starter script to start the MCP server with proper process management, ensuring only one instance is running at a time, creating a PID file, and setting up proper signal handling for clean shutdown.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 3,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-10T20:06:20.114Z",
+    "updatedAt": "2025-05-10T20:06:41.422Z",
+    "projectId": "mcp-server-maintenance",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Maintenance Script Implementation",
+    "description": "Implement a maintenance script to perform routine maintenance tasks including process cleanup, log rotation, and system health checks. Design it to be run as a cron job to regularly manage logs and processes.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 4,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-10T20:06:26.355Z",
+    "updatedAt": "2025-05-10T20:06:46.534Z",
+    "projectId": "mcp-server-maintenance",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Documentation and Testing",
+    "description": "Create comprehensive documentation for the process management and log rotation scripts, including usage instructions and best practices. Test the scripts in various scenarios to ensure they work as expected.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 5,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-05-10T20:06:32.450Z",
+    "updatedAt": "2025-05-10T20:06:51.930Z",
+    "projectId": "mcp-server-maintenance",
+    "subtasks": [],
+    "isSubtask": true
+  }
+]

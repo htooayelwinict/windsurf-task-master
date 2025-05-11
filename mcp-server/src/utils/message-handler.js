@@ -6,35 +6,21 @@
 import { logger } from './logger.js';
 
 /**
- * Safely parse a JSON string, handling any BOM characters or formatting issues
+ * Safely parse a JSON string - simplified to prevent JSON parsing errors
  * @param {string} jsonString - The JSON string to parse
  * @returns {object|null} - The parsed JSON object or null if parsing fails
  */
 export function safeParseJson(jsonString) {
     try {
-        // Remove BOM if present
-        if (jsonString.charCodeAt(0) === 0xFEFF) {
-            jsonString = jsonString.slice(1);
-        }
+        // Basic trim to remove whitespace
+        const trimmed = jsonString.trim();
         
-        // Remove any extra whitespace or non-standard characters
-        jsonString = jsonString.trim();
-        
-        // Parse the JSON string
-        return JSON.parse(jsonString);
+        // Simple direct parse - no complex handling
+        return JSON.parse(trimmed);
     } catch (error) {
+        // Minimal error logging to stderr only
         logger.error(`Error parsing JSON: ${error.message}`);
-        logger.debug(`JSON string (first 50 chars): ${jsonString.substring(0, 50)}`);
-        
-        // Try to clean the string and parse again
-        try {
-            // Replace any non-standard JSON characters
-            const cleanedString = jsonString.replace(/[\\u0000-\\u001F\\u007F-\\u009F\\u00AD\\u0600-\\u0604\\u070F\\u17B4\\u17B5\\u200B-\\u200F\\u2028-\\u202F\\u2060-\\u206F\\uFEFF\\uFFF0-\\uFFFF]/g, '');
-            return JSON.parse(cleanedString);
-        } catch (secondError) {
-            logger.error(`Failed to parse JSON after cleaning: ${secondError.message}`);
-            return null;
-        }
+        return null;
     }
 }
 

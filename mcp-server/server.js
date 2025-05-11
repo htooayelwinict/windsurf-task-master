@@ -1,31 +1,32 @@
-#!/usr/bin/env node
+/**
+ * Entry point for the Windsurf Task Master MCP Server
+ */
 
 import WindsurfTaskMCPServer from './src/index.js';
 
-/**
- * Start the MCP server for Windsurf Task Master
- */
-async function startServer() {
-    const server = new WindsurfTaskMCPServer();
+// Track if shutdown is in progress
+let isShuttingDown = false;
 
-    // Handle graceful shutdown
-    process.on('SIGINT', async () => {
-        await server.stop();
-        process.exit(0);
-    });
+// Create and start the server
+const server = new WindsurfTaskMCPServer();
 
-    process.on('SIGTERM', async () => {
-        await server.stop();
-        process.exit(0);
-    });
-
-    try {
-        await server.start();
-    } catch (error) {
-        console.error(`Failed to start MCP server: ${error.message}`);
-        process.exit(1);
+// Handle stdin end for clean shutdown
+process.stdin.on('end', () => {
+    if (!isShuttingDown) {
+        isShuttingDown = true;
+        console.error('Stdin end detected, shutting down...');
+        
+        // Stop the server and exit
+        server.stop().catch(error => {
+            console.error(`Error stopping server: ${error.message}`);
+        }).finally(() => {
+            process.exit(0);
+        });
     }
-}
+});
 
 // Start the server
-startServer();
+server.start().catch(error => {
+    console.error(`Failed to start server: ${error.message}`);
+    process.exit(1);
+});
