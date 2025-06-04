@@ -31,33 +31,5 @@
       4
     ],
     "isSubtask": false
-  },
-  {
-    "title": "Test Error Handling",
-    "description": "This subtask tests the error handling mechanisms implemented in the MCP server. It verifies that the server can properly recover from communication errors and continue operating.",
-    "priority": "medium",
-    "dependencies": [],
-    "id": 3,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-10T14:39:10.050Z",
-    "updatedAt": "2025-05-10T14:39:10.050Z",
-    "projectId": "task-cleanup",
-    "subtasks": [],
-    "isSubtask": true
-  },
-  {
-    "title": "Test Message Formatting",
-    "description": "This subtask tests the message formatting functionality implemented in the MCP server. It verifies that the server can properly format JSON-RPC messages and handle missing methods.",
-    "priority": "medium",
-    "dependencies": [],
-    "id": 4,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-10T14:39:14.866Z",
-    "updatedAt": "2025-05-10T14:39:14.866Z",
-    "projectId": "task-cleanup",
-    "subtasks": [],
-    "isSubtask": true
   }
 ]

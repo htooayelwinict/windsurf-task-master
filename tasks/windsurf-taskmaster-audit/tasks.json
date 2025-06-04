@@ -96,28 +96,5 @@
     "assignedAt": "2025-05-04T18:31:58.389Z",
     "progress": 100,
     "completedAt": "2025-05-04T18:35:37.028Z"
-  },
-  {
-    "id": 7,
-    "title": "Dependency Management Review",
-    "description": "Analyze current dependencies, check for outdated packages, security vulnerabilities, and optimize dependency management.",
-    "status": "pending",
-    "priority": "medium",
-    "dependencies": [],
-    "projectId": "windsurf-taskmaster-audit",
-    "createdAt": "2025-05-04T17:53:44.966Z",
-    "updatedAt": "2025-05-04T17:53:44.966Z"
-  },
-  {
-    "title": "Fix missing getTask method in TaskManager",
-    "description": "Implement the missing getTask method in the TaskManager class to fix the error \"this.getTask is not a function\" that occurs when assigning tasks to Windsurf.",
-    "priority": "high",
-    "dependencies": [],
-    "id": 8,
-    "status": "pending",
-    "progress": 0,
-    "createdAt": "2025-05-04T18:44:27.326Z",
-    "updatedAt": "2025-05-04T18:44:27.329Z",
-    "projectId": "windsurf-taskmaster-audit"
   }
 ]

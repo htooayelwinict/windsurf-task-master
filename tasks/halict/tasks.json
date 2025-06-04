@@ -169,7 +169,7 @@
   },
   {
     "title": "Testing, optimization, and deployment",
-    "description": "Conduct comprehensive testing across devices and browsers. Implement performance optimizations for 3D content and data-heavy features. Set up deployment pipeline with Vercel for the Next.js application. Configure CI/CD using GitHub Actions and implement basic analytics.",
+    "description": "Fix deployment issues with the Halict Next.js application on Netlify by updating configuration and installing required plugins.",
     "priority": "high",
     "dependencies": [
       4,
@@ -181,11 +181,14 @@
       10
     ],
     "id": 11,
-    "status": "pending",
-    "progress": 0,
+    "status": "completed",
+    "progress": 100,
     "createdAt": "2025-05-07T16:56:01.895Z",
-    "updatedAt": "2025-05-07T16:56:01.895Z",
-    "projectId": "halict"
+    "updatedAt": "2025-05-11T10:13:42.634Z",
+    "projectId": "halict",
+    "assignedTo": "windsurf",
+    "assignedAt": "2025-05-11T08:01:13.902Z",
+    "completedAt": "2025-05-11T10:13:42.633Z"
   },
   {
     "title": "Documentation and user guide",

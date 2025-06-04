@@ -23,6 +23,9 @@ import { registerDisplayTaskStatusTool } from './display-task-status.js';
 import { registerCleanupTasksTool } from './cleanup-tasks.js';
 import { registerGetProjectsTool } from './get-projects.js';
 
+// Context awareness tools
+import { registerGetHelpTool } from './get-help.js';
+
 /**
  * Register all task management tools with the MCP server
  * @param {Object} server - FastMCP server instance
@@ -59,8 +62,17 @@ export function registerTaskTools(server, taskManager) {
         } catch (error) {
             console.error(`Error registering get_projects tool: ${error.message}`);
         }
+        
+        // Add explicit logging for get_help tool registration
+        console.error('About to register get_help tool');
+        try {
+            registerGetHelpTool(server, taskManager);
+            console.error('Successfully registered get_help tool');
+        } catch (error) {
+            console.error(`Error registering get_help tool: ${error.message}`);
+        }
 
-        console.error('All task management tools registered successfully');
+        console.error('All task management tools registered successfully (including context awareness)');
     } catch (error) {
         console.error(`Error registering task tools: ${error.message}`);
         throw error;
@@ -69,5 +81,6 @@ export function registerTaskTools(server, taskManager) {
 
 export default {
     registerTaskTools,
-    registerGetProjectsTool
+    registerGetProjectsTool,
+    registerGetHelpTool
 };

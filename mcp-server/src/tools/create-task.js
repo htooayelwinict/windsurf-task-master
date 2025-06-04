@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { TaskValidationError, createErrorHandler } from '../utils/errors.js';
 import { isValidProjectId } from '../utils/security.js';
 import { logger } from '../utils/logger.js';
+import SmartDefaults from '../utils/smart-defaults.js';
 
 /**
  * Create a new task
@@ -33,17 +34,32 @@ export function registerCreateTaskTool(server, taskManager) {
                     });
                 }
                 
-                const task = await taskManager.createTask({
+                // Apply smart defaults to enhance task creation
+                const smartResult = SmartDefaults.apply({
                     title: args.title,
                     description: args.description,
                     priority: args.priority,
                     dependencies: args.dependencies || []
-                }, args.projectId);
+                });
+                
+                // Create task with enhanced data
+                const task = await taskManager.createTask(smartResult.enhanced, args.projectId);
+                
+                // Prepare response with smart suggestions
+                let responseText = `Task created successfully with ID: ${task.id} for project: ${args.projectId}`;
+                
+                // Add smart suggestions if any were generated
+                if (smartResult.suggestions && smartResult.suggestions.length > 0) {
+                    responseText += '\n\n💡 Smart suggestions applied:';
+                    smartResult.suggestions.forEach(suggestion => {
+                        responseText += `\n- ${suggestion}`;
+                    });
+                }
                 
                 return {
                     content: [{
                         type: 'text',
-                        text: `Task created successfully with ID: ${task.id} for project: ${args.projectId}`
+                        text: responseText
                     }]
                 };
             } catch (error) {

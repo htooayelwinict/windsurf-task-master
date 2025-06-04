@@ -87,6 +87,7 @@ class WindsurfTaskMCPServer {
         }
         
         logger.info('Windsurf Task Master MCP Server stopped');
+        return true;
     }
 }
 
