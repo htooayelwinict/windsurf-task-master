@@ -25,6 +25,7 @@ import { registerGetProjectsTool } from './get-projects.js';
 
 // Context awareness tools
 import { registerGetHelpTool } from './get-help.js';
+import { registerSuggestProjectStructureTool } from './suggest-project-structure.js';
 
 /**
  * Register all task management tools with the MCP server
@@ -71,8 +72,17 @@ export function registerTaskTools(server, taskManager) {
         } catch (error) {
             console.error(`Error registering get_help tool: ${error.message}`);
         }
+        
+        // Add explicit logging for suggest_project_structure tool registration
+        console.error('About to register suggest_project_structure tool');
+        try {
+            registerSuggestProjectStructureTool(server, taskManager);
+            console.error('Successfully registered suggest_project_structure tool');
+        } catch (error) {
+            console.error(`Error registering suggest_project_structure tool: ${error.message}`);
+        }
 
-        console.error('All task management tools registered successfully (including context awareness)');
+        console.error('All task management tools registered successfully (including context awareness & hierarchy tools)');
     } catch (error) {
         console.error(`Error registering task tools: ${error.message}`);
         throw error;
@@ -82,5 +92,6 @@ export function registerTaskTools(server, taskManager) {
 export default {
     registerTaskTools,
     registerGetProjectsTool,
-    registerGetHelpTool
+    registerGetHelpTool,
+    registerSuggestProjectStructureTool
 };

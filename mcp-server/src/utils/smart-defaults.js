@@ -4,6 +4,7 @@
  */
 
 import { logger } from './logger.js';
+import TaskHierarchyAnalyzer from './task-hierarchy.js';
 
 /**
  * Smart defaults for task creation
@@ -131,13 +132,20 @@ export class SmartDefaults {
     /**
      * Apply smart defaults to task data
      * @param {Object} taskData - Original task data
-     * @returns {Object} Enhanced task data with smart defaults applied
+     * @param {Array} existingTasks - Existing tasks in project (optional)
+     * @returns {Object} Enhanced task data and suggestions
      */
-    static apply(taskData) {
+    static apply(taskData, existingTasks = []) {
         const enhanced = { ...taskData };
         let suggestions = [];
         
         try {
+            // Check for potential turtleneck pattern
+            const hierarchyCheck = this.checkForTurtleneckPattern(taskData, existingTasks);
+            if (hierarchyCheck.shouldSuggestBalancedStructure) {
+                suggestions.push(hierarchyCheck.suggestion);
+            }
+            
             // Apply smart priority if not explicitly set or if set to default 'medium'
             if (!taskData.priority || taskData.priority === 'medium') {
                 const inferredPriority = this.inferPriority(taskData.title, taskData.description);
@@ -166,7 +174,8 @@ export class SmartDefaults {
                 analysis: {
                     priorityInferred: enhanced.priority !== taskData.priority,
                     descriptionEnhanced: enhanced.description !== taskData.description,
-                    complexity: sizeAnalysis.estimatedComplexity
+                    complexity: sizeAnalysis.estimatedComplexity,
+                    turtleneckRisk: hierarchyCheck.shouldSuggestBalancedStructure
                 }
             };
             
@@ -178,6 +187,47 @@ export class SmartDefaults {
                 suggestions: [],
                 analysis: {}
             };
+        }
+    }
+    
+    /**
+     * Check if task creation might result in turtleneck pattern
+     * @param {Object} taskData - Task being created
+     * @param {Array} existingTasks - Existing tasks in project
+     * @returns {Object} Analysis result
+     */
+    static checkForTurtleneckPattern(taskData, existingTasks) {
+        try {
+            // Check if this looks like a large project-level task
+            const projectLevelIndicators = [
+                /build.*application|create.*system|develop.*platform/i,
+                /complete.*project|full.*implementation|entire.*workflow/i,
+                /build.*website|create.*app|develop.*service/i
+            ];
+            
+            const text = `${taskData.title} ${taskData.description}`.toLowerCase();
+            const looksLikeProjectTask = projectLevelIndicators.some(pattern => pattern.test(text));
+            
+            if (looksLikeProjectTask) {
+                // Use hierarchy analyzer to check if multiple domains are involved
+                const hierarchyAnalysis = TaskHierarchyAnalyzer.analyzeProject(
+                    `${taskData.title} ${taskData.description}`, 
+                    existingTasks
+                );
+                
+                if (hierarchyAnalysis.shouldUseBalancedStructure) {
+                    return {
+                        shouldSuggestBalancedStructure: true,
+                        suggestion: `🏗️ Complex project detected! Consider using 'suggest_project_structure' to avoid turtleneck pattern and create balanced task hierarchy with multiple parent tasks.`
+                    };
+                }
+            }
+            
+            return { shouldSuggestBalancedStructure: false };
+            
+        } catch (error) {
+            logger.error('Error checking turtleneck pattern:', error);
+            return { shouldSuggestBalancedStructure: false };
         }
     }
 }

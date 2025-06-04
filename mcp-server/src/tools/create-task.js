@@ -34,13 +34,22 @@ export function registerCreateTaskTool(server, taskManager) {
                     });
                 }
                 
+                // Get existing tasks to help with hierarchy analysis
+                let existingTasks = [];
+                try {
+                    existingTasks = await taskManager.listTasks(args.projectId);
+                } catch (error) {
+                    // Project might not exist yet - that's fine for new projects
+                    logger.debug(`Could not load existing tasks for project ${args.projectId}`);
+                }
+                
                 // Apply smart defaults to enhance task creation
                 const smartResult = SmartDefaults.apply({
                     title: args.title,
                     description: args.description,
                     priority: args.priority,
                     dependencies: args.dependencies || []
-                });
+                }, existingTasks);
                 
                 // Create task with enhanced data
                 const task = await taskManager.createTask(smartResult.enhanced, args.projectId);
