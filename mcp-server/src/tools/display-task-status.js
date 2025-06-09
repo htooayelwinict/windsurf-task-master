@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import path from 'path';
 import fs from 'fs/promises';
+import { BRANDING, formatBrandedMessage } from '../constants/branding.js';
+import { createBrandedSuccessResponse, createBrandedErrorResponse } from '../utils/branding-helper.js';
 
 /**
  * Display task status for Windsurf
@@ -8,7 +10,7 @@ import fs from 'fs/promises';
 export function registerDisplayTaskStatusTool(server, taskManager) {
     server.addTool({
         name: 'display_task_status',
-        description: 'Display detailed status of tasks for Windsurf with completion percentages',
+        description: `Display detailed status of tasks for ${BRANDING.PRODUCT_NAME} with completion percentages`,
         parameters: z.object({
             projectId: z.string().optional().describe('Optional project ID to display tasks for a specific project')
         }),
@@ -30,7 +32,7 @@ export function registerDisplayTaskStatusTool(server, taskManager) {
                             .map(entry => entry.name);
                     } catch (error) {
                         if (error.code !== 'ENOENT') {
-                            console.error('Error reading projects directory:', error);
+                            console.error(formatBrandedMessage(`Error reading projects directory: ${error.message}`, 'error'));
                         }
                         allProjects = [];
                     }
@@ -115,8 +117,8 @@ export function registerDisplayTaskStatusTool(server, taskManager) {
                 
                 // Build the status report
                 let statusReport = args.projectId 
-                    ? `Task Status for Project: ${args.projectId}\n` 
-                    : 'Task Status Summary\n';
+                    ? `${BRANDING.PRODUCT_NAME_SHORT} Task Status for Project: ${args.projectId}\n` 
+                    : `${BRANDING.PRODUCT_NAME_SHORT} Task Status Summary\n`;
                 
                 statusReport += '===================\n\n';
                 statusReport += `Total Projects: ${overallStats.totalProjects}\n`;
@@ -158,6 +160,9 @@ export function registerDisplayTaskStatusTool(server, taskManager) {
                     statusReport += '\n';
                 }
                 
+                // Add trademark notice
+                statusReport += `\n---\n${BRANDING.TRADEMARK_NOTICE}`;
+                
                 return {
                     content: [{
                         type: 'text',
@@ -165,14 +170,8 @@ export function registerDisplayTaskStatusTool(server, taskManager) {
                     }]
                 };
             } catch (error) {
-                console.error('Error displaying task status:', error);
-                return {
-                    content: [{
-                        type: 'text',
-                        text: `Error displaying task status: ${error.message}`
-                    }],
-                    isError: true
-                };
+                console.error(formatBrandedMessage(`Error displaying task status: ${error.message}`, 'error'));
+                return createBrandedErrorResponse(`Error displaying task status: ${error.message}`);
             }
         }
     });

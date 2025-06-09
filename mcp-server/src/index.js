@@ -7,6 +7,7 @@ import { registerTaskTools } from './tools/index.js';
 import { FileWatcher } from './core/file-watcher.js';
 import TaskCleanupService from './core/task-cleanup-service.js';
 import { logger } from './utils/logger.js';
+import { BRANDING, formatBrandedMessage, getBrandedVersion } from './constants/branding.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,9 +22,13 @@ class WindsurfTaskMCPServer {
         const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 
         this.options = {
-            name: 'Windsurf Task Master MCP Server',
-            version: packageJson.version
+            name: BRANDING.PRODUCT_NAME,
+            version: getBrandedVersion(packageJson.version),
+            description: `${BRANDING.TAGLINE} | ${BRANDING.TRADEMARK_NOTICE}`
         };
+        
+        // Show branded startup message
+        logger.startup();
 
         this.server = new FastMCP(this.options);
         this.initialized = false;
@@ -51,7 +56,7 @@ class WindsurfTaskMCPServer {
         
         // Register task cleanup service hooks
         this.taskCleanupService.registerHooks();
-        logger.info('Task Cleanup Service initialized and hooks registered');
+        logger.info(formatBrandedMessage('Task Cleanup Service initialized and hooks registered', 'info'));
 
         this.initialized = true;
         return this;
@@ -70,7 +75,7 @@ class WindsurfTaskMCPServer {
             transportType: 'stdio'
         });
 
-        console.error('Windsurf Task Master MCP Server started successfully');
+        console.error(formatBrandedMessage(`${BRANDING.PRODUCT_NAME} started successfully`, 'success'));
         return this;
     }
 
@@ -86,7 +91,7 @@ class WindsurfTaskMCPServer {
             await this.server.stop();
         }
         
-        logger.info('Windsurf Task Master MCP Server stopped');
+        logger.info(`${BRANDING.PRODUCT_NAME} stopped`);
         return true;
     }
 }

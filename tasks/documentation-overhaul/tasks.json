@@ -1,0 +1,92 @@
+[
+  {
+    "title": "Overhaul Documentation",
+    "description": "Completely update and reorganize project documentation including README.md and other markdown files to reflect current codebase structure, branding, and features.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:48:52.166Z",
+    "updatedAt": "2025-06-09T15:48:52.166Z",
+    "projectId": "documentation-overhaul",
+    "subtasks": [],
+    "isSubtask": false
+  },
+  {
+    "title": "Process Documentation",
+    "description": "Create documentation for process management, maintenance scripts, log rotation, and server startup/shutdown procedures.",
+    "priority": "medium",
+    "id": 2,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:49:13.389Z",
+    "updatedAt": "2025-06-09T15:51:25.939Z",
+    "dependencies": [],
+    "projectId": "documentation-overhaul",
+    "subtasks": [
+      3,
+      4,
+      5
+    ],
+    "isSubtask": false
+  },
+  {
+    "title": "Core Documentation",
+    "description": "Update and reorganize core documentation files including README.md, CONTRIBUTING.md, and LICENSE to reflect current branding, project structure, and features.",
+    "priority": "high",
+    "id": 3,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:49:14.397Z",
+    "updatedAt": "2025-06-09T15:50:32.316Z",
+    "dependencies": [],
+    "projectId": "documentation-overhaul",
+    "subtasks": [
+      6
+    ],
+    "isSubtask": true
+  },
+  {
+    "title": "Update README.md",
+    "description": "Completely overhaul the README.md to include current branding, project structure, features, installation instructions, usage examples, and contribution guidelines.",
+    "priority": "high",
+    "id": 4,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:49:15.424Z",
+    "updatedAt": "2025-06-09T15:58:26.721Z",
+    "dependencies": [],
+    "projectId": "documentation-overhaul",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Technical Documentation",
+    "description": "Document the technical architecture of the Windsurf Task Master MCP server including core components, MCP tools, task management system, and branding implementation.",
+    "priority": "medium",
+    "id": 5,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:49:16.432Z",
+    "updatedAt": "2025-06-09T15:50:49.558Z",
+    "dependencies": [],
+    "projectId": "documentation-overhaul",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Update CONTRIBUTING.md",
+    "description": "Create or update CONTRIBUTING.md with guidelines for code style, pull requests, issue reporting, and development workflow.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 6,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:51:39.056Z",
+    "updatedAt": "2025-06-09T15:51:39.056Z",
+    "projectId": "documentation-overhaul",
+    "subtasks": [],
+    "isSubtask": true
+  }
+]

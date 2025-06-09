@@ -1,11 +1,13 @@
 /**
- * Simple logger utility for the Windsurf Task Master system.
+ * Simple logger utility for the Windsurf Task Master™ system.
  * 
  * This module provides basic logging functionality that writes directly to stderr
  * to prevent interference with JSON-RPC messages on stdout.
  * 
  * @module logger
  */
+
+import { BRANDING, formatBrandedMessage } from '../constants/branding.js';
 class SimpleLogger {
     /**
      * Format a log message with timestamp
@@ -15,7 +17,8 @@ class SimpleLogger {
      */
     formatMessage(level, message) {
         const timestamp = new Date().toISOString();
-        return `${timestamp} [${level}] ${message}`;
+        const brandedMsg = formatBrandedMessage(message, level.toLowerCase());
+        return `${timestamp} ${brandedMsg}`;
     }
     
     /**
@@ -71,6 +74,13 @@ class SimpleLogger {
      */
     fsOp(operation, path) {
         this.debug(`File System Operation: ${operation} (Path: ${path})`);
+    }
+    
+    /**
+     * Display startup banner
+     */
+    startup() {
+        process.stderr.write('\n' + BRANDING.CLI_BANNER + '\n');
     }
 }
 

@@ -1,0 +1,77 @@
+[
+  {
+    "title": "License & Copyright Updates Implementation",
+    "description": "Update the project with MIT License with Trademark Provisions and add copyright headers to all relevant files. This includes updating the LICENSE file, README.md, package.json, and adding copyright headers to all JavaScript files in the project.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 1,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:20:07.663Z",
+    "updatedAt": "2025-06-09T15:20:07.663Z",
+    "projectId": "license-update",
+    "subtasks": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "isSubtask": false
+  },
+  {
+    "title": "Update LICENSE file with trademark provisions",
+    "description": "Create or update the LICENSE file with the MIT License with Trademark Provisions as specified in the requirements.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 2,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:20:17.344Z",
+    "updatedAt": "2025-06-09T15:22:01.529Z",
+    "projectId": "license-update",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Update README.md with trademark notices",
+    "description": "Update the README.md file to include trademark notices as specified in the requirements.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 3,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:20:26.183Z",
+    "updatedAt": "2025-06-09T15:22:25.509Z",
+    "projectId": "license-update",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Update package.json with trademark information",
+    "description": "Update package.json to include trademark symbol in the description and ensure license information is correct.",
+    "priority": "medium",
+    "dependencies": [],
+    "id": 4,
+    "status": "completed",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:20:34.803Z",
+    "updatedAt": "2025-06-09T15:22:46.415Z",
+    "projectId": "license-update",
+    "subtasks": [],
+    "isSubtask": true
+  },
+  {
+    "title": "Add copyright headers to JavaScript files",
+    "description": "Add copyright headers to all JavaScript files in the /mcp-server/src/ directory using the standard header template provided in the requirements.",
+    "priority": "high",
+    "dependencies": [],
+    "id": 5,
+    "status": "pending",
+    "progress": 0,
+    "createdAt": "2025-06-09T15:20:44.481Z",
+    "updatedAt": "2025-06-09T15:20:44.481Z",
+    "projectId": "license-update",
+    "subtasks": [],
+    "isSubtask": true
+  }
+]

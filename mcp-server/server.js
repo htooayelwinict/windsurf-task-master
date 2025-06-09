@@ -3,9 +3,13 @@
  */
 
 import WindsurfTaskMCPServer from './src/index.js';
+import { BRANDING, formatBrandedMessage } from './src/constants/branding.js';
 
 // Track if shutdown is in progress
 let isShuttingDown = false;
+
+// Add branded startup message
+console.error(formatBrandedMessage('Initializing server...', 'primary'));
 
 // Create and start the server
 const server = new WindsurfTaskMCPServer();
@@ -14,11 +18,11 @@ const server = new WindsurfTaskMCPServer();
 process.stdin.on('end', () => {
     if (!isShuttingDown) {
         isShuttingDown = true;
-        console.error('Stdin end detected, shutting down...');
+        console.error(formatBrandedMessage('Stdin end detected, shutting down...', 'warning'));
         
         // Stop the server and exit
         server.stop().catch(error => {
-            console.error(`Error stopping server: ${error.message}`);
+            console.error(formatBrandedMessage(`Error stopping server: ${error.message}`, 'error'));
         }).finally(() => {
             process.exit(0);
         });
@@ -27,6 +31,7 @@ process.stdin.on('end', () => {
 
 // Start the server
 server.start().catch(error => {
-    console.error(`Failed to start server: ${error.message}`);
+    console.error(formatBrandedMessage(`Fatal error: ${error.message}`, 'error'));
+    console.error(formatBrandedMessage('Please report this issue at ' + BRANDING.URLS.GITHUB, 'warning'));
     process.exit(1);
 });

@@ -1,7 +1,7 @@
 {
   "name": "windsurf-task-master",
   "version": "1.0.0",
-  "description": "MCP server for task management between Claude Desktop and Windsurf",
+  "description": "Windsurf Task Master™ - Project-aware task management for Windsurf developers",
   "main": "mcp-server/server.js",
   "type": "module",
   "bin": {
@@ -11,16 +11,29 @@
     "start": "node mcp-server/server.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "brand-check": "node scripts/verify-branding.js"
   },
   "keywords": [
+    "windsurf-task-master",
+    "trademark",
     "mcp",
     "task-management",
     "windsurf",
-    "claude-desktop"
+    "claude-desktop",
+    "project-isolation"
   ],
-  "author": "Your Name",
+  "author": {
+    "name": "Htoo Aye Lwin",
+    "url": "https://github.com/htooayelwinict"
+  },
+  "homepage": "https://github.com/htooayelwinict/windsurf-task-master",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/htooayelwinict/windsurf-task-master.git"
+  },
   "license": "MIT",
+  "trademark": "Windsurf Task Master™ is a trademark of Htoo Aye Lwin",
   "dependencies": {
     "axios": "^1.9.0",
     "chalk": "^5.4.1",

@@ -24,6 +24,34 @@ This document provides detailed information about the core components and utilit
 
 ## Core Components
 
+### Component Relationships
+
+```mermaid
+flowchart TD
+    WTM[WindsurfTaskMaster] --> TM[TaskManager]
+    WTM --> FW[FileWatcher]
+    WTM --> TCS[TaskCleanupService]
+    TM --> TCS
+    TM --> FW
+    TM --> TS[TaskStorage]
+    
+    %% Utility connections
+    TM --> CU[Cache Utility]
+    TM --> DU[Debounce Utility]
+    TM --> SU[Security Utility]
+    TCS --> TCConfig[Task Cleanup Config]
+    
+    %% Task Hierarchy
+    THU[Task Hierarchy Utility] --> TM
+    SDU[Smart Defaults Utility] --> THU
+    
+    %% Branding
+    BC[Branding Constants] --> BHU[Branding Helper]
+    BHU --> TM
+    BHU --> TCS
+    BHU --> FW
+```
+
 ### TaskManager
 
 The `TaskManager` class is responsible for managing tasks across different projects. It provides methods for creating, updating, and retrieving tasks.
@@ -145,6 +173,29 @@ await cleanupService.performCleanup('my-project');
 The `FileWatcher` class monitors task files for changes and triggers appropriate actions when changes are detected.
 
 ## Utilities
+
+```mermaid
+flowchart LR
+    subgraph Utilities
+        Cache
+        Debouncer
+        ErrorHandler
+        Security
+        Logger
+        BrandingHelper
+        TaskHierarchy
+        SmartDefaults
+    end
+    
+    TaskManager --> Cache
+    TaskManager --> Debouncer
+    TaskManager --> Security
+    TaskManager --> ErrorHandler
+    TaskManager --> Logger
+    
+    TaskHierarchy --> SmartDefaults
+    BrandingHelper --> Logger
+```
 
 ### Cache
 
@@ -276,6 +327,122 @@ logger.error('Failed to process payment', {
 });
 ```
 
+## MCP Tools
+
+The Windsurf Task Master exposes a comprehensive set of MCP tools for task management. These tools are categorized into five main groups:
+
+```mermaid
+flowchart TD
+    MCPTools[MCP Tools] --> TMT[Task Management Tools]
+    MCPTools --> ST[Subtask Tools]
+    MCPTools --> WIT[Windsurf Integration Tools]
+    MCPTools --> PMT[Project Management Tools]
+    MCPTools --> SPT[Support Tools]
+    
+    %% Task Management Tools
+    TMT --> create_task
+    TMT --> update_task
+    TMT --> complete_task
+    TMT --> delete_task
+    TMT --> delete_tasks
+    TMT --> list_tasks
+    
+    %% Subtask Tools
+    ST --> add_subtask
+    ST --> get_subtasks
+    
+    %% Windsurf Integration Tools
+    WIT --> assign_to_windsurf
+    WIT --> get_windsurf_tasks
+    WIT --> update_windsurf_progress
+    
+    %% Project Management Tools
+    PMT --> get_projects
+    PMT --> cleanup_tasks
+    PMT --> suggest_project_structure
+    
+    %% Support Tools
+    SPT --> get_help
+    SPT --> display_task_status
+```
+
+### Tool Categories
+
+#### Task Management Tools
+
+- **create_task**: Create a new task for a project
+- **update_task**: Update an existing task's properties
+- **complete_task**: Mark a task as completed
+- **delete_task**: Delete a task and its subtasks
+- **delete_tasks**: Delete multiple tasks based on criteria
+- **list_tasks**: List all tasks or filter by status
+
+#### Subtask Tools
+
+- **add_subtask**: Add a subtask to a parent task
+- **get_subtasks**: Get all subtasks for a parent task
+
+#### Windsurf Integration Tools
+
+- **assign_to_windsurf**: Assign a task to Windsurf for processing
+- **get_windsurf_tasks**: Get all tasks assigned to Windsurf
+- **update_windsurf_progress**: Update progress on a task assigned to Windsurf
+
+#### Project Management Tools
+
+- **get_projects**: Get all available projects
+- **cleanup_tasks**: Clean up tasks in a project
+- **suggest_project_structure**: Analyze project requirements and suggest balanced task structure
+
+#### Support Tools
+
+- **get_help**: Get contextual help and workflow guidance
+- **display_task_status**: Display detailed status of tasks with completion percentages
+
+## Branding
+
+The Windsurf Task Master incorporates consistent branding across all components and tools.
+
+```mermaid
+flowchart TD
+    BC[Branding Constants] --> BHU[Branding Helper Utility]
+    BHU --> MCPTools[MCP Tools]
+    BHU --> Logger
+    BHU --> ErrorHandler
+    
+    BVS[Branding Verification Script] --> BC
+```
+
+### Branding Constants
+
+The branding constants define the core identity elements of the Windsurf Task Master:
+
+- **Product Name**: The official name of the product
+- **Tagline**: A short descriptive phrase
+- **Copyright**: Copyright information
+- **CLI Banner**: ASCII art banner for CLI display
+- **Colors**: Brand colors for console output
+- **URLs**: Important URLs (documentation, support, etc.)
+
+### Branding Helper Utility
+
+The Branding Helper provides methods for consistent branding across the application:
+
+| Method | Description | Parameters |
+|--------|-------------|------------|
+| `formatBrandedMessage(message)` | Format a message with branding | `message` (string): Message to format |
+| `getVersionString()` | Get formatted version string | None |
+| `getBrandedBanner()` | Get CLI banner with branding | None |
+| `formatErrorMessage(error)` | Format error message with branding | `error` (Error): Error to format |
+
+### Branding Verification
+
+The system includes a verification script that ensures branding consistency across all components:
+
+- Validates branding constants against package.json
+- Checks for consistent branding in all tools and components
+- Verifies correct usage of branding helper methods
+
 ## Performance Optimization
 
 ### Caching Strategy
@@ -323,6 +490,10 @@ flowchart TB
         OS --> R3[Reassigned Subtasks]
         QE --> R4[Improved Task Quality]
         RI --> R5[Sequential Task IDs]
+    end
+    
+    subgraph "Configuration"
+        Config[TaskCleanupConfig] --> Cleanup
     end
 ```
 

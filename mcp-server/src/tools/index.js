@@ -1,5 +1,8 @@
 /**
- * Register all task management tools for the MCP server
+ * Register all task management tools for the Windsurf Task Master™
+ *
+ * Copyright (c) 2025 WTM
+ * Windsurf Task Master™ is a trademark of WTM.
  */
 
 import { registerCreateTaskTool } from './create-task.js';
@@ -26,6 +29,10 @@ import { registerGetProjectsTool } from './get-projects.js';
 // Context awareness tools
 import { registerGetHelpTool } from './get-help.js';
 import { registerSuggestProjectStructureTool } from './suggest-project-structure.js';
+
+// Branding utilities
+import { BRANDING, formatBrandedMessage } from '../constants/branding.js';
+import { enhanceErrorHandlerWithBranding } from '../utils/branding-helper.js';
 
 /**
  * Register all task management tools with the MCP server
@@ -56,35 +63,35 @@ export function registerTaskTools(server, taskManager) {
         registerCleanupTasksTool(server, taskManager);
         
         // Add explicit logging for get_projects tool registration
-        console.error('About to register get_projects tool');
+        console.error(formatBrandedMessage('Registering get_projects tool...', 'info'));
         try {
             registerGetProjectsTool(server, taskManager);
-            console.error('Successfully registered get_projects tool');
+            console.error(formatBrandedMessage('Successfully registered get_projects tool', 'success'));
         } catch (error) {
-            console.error(`Error registering get_projects tool: ${error.message}`);
+            console.error(formatBrandedMessage(`Error registering get_projects tool: ${error.message}`, 'error'));
         }
         
         // Add explicit logging for get_help tool registration
-        console.error('About to register get_help tool');
+        console.error(formatBrandedMessage('Registering get_help tool...', 'info'));
         try {
             registerGetHelpTool(server, taskManager);
-            console.error('Successfully registered get_help tool');
+            console.error(formatBrandedMessage('Successfully registered get_help tool', 'success'));
         } catch (error) {
-            console.error(`Error registering get_help tool: ${error.message}`);
+            console.error(formatBrandedMessage(`Error registering get_help tool: ${error.message}`, 'error'));
         }
         
         // Add explicit logging for suggest_project_structure tool registration
-        console.error('About to register suggest_project_structure tool');
+        console.error(formatBrandedMessage('Registering suggest_project_structure tool...', 'info'));
         try {
             registerSuggestProjectStructureTool(server, taskManager);
-            console.error('Successfully registered suggest_project_structure tool');
+            console.error(formatBrandedMessage('Successfully registered suggest_project_structure tool', 'success'));
         } catch (error) {
-            console.error(`Error registering suggest_project_structure tool: ${error.message}`);
+            console.error(formatBrandedMessage(`Error registering suggest_project_structure tool: ${error.message}`, 'error'));
         }
 
-        console.error('All task management tools registered successfully (including context awareness & hierarchy tools)');
+        console.error(formatBrandedMessage('All task management tools registered successfully', 'success'));
     } catch (error) {
-        console.error(`Error registering task tools: ${error.message}`);
+        console.error(formatBrandedMessage(`Error registering task tools: ${error.message}`, 'error'));
         throw error;
     }
 }

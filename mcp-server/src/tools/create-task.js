@@ -3,6 +3,7 @@ import { TaskValidationError, createErrorHandler } from '../utils/errors.js';
 import { isValidProjectId } from '../utils/security.js';
 import { logger } from '../utils/logger.js';
 import SmartDefaults from '../utils/smart-defaults.js';
+import { BRANDING, formatBrandedMessage } from '../constants/branding.js';
 
 /**
  * Create a new task
@@ -10,7 +11,7 @@ import SmartDefaults from '../utils/smart-defaults.js';
 export function registerCreateTaskTool(server, taskManager) {
     server.addTool({
         name: 'create_task',
-        description: 'Create a new task',
+        description: `Create a new task with ${BRANDING.PRODUCT_NAME}`,
         parameters: z.object({
             title: z.string().min(1, 'Title is required').max(100, 'Title is too long').describe('Task title'),
             description: z.string().max(1000, 'Description is too long').describe('Task description'),
@@ -55,7 +56,7 @@ export function registerCreateTaskTool(server, taskManager) {
                 const task = await taskManager.createTask(smartResult.enhanced, args.projectId);
                 
                 // Prepare response with smart suggestions
-                let responseText = `Task created successfully with ID: ${task.id} for project: ${args.projectId}`;
+                let responseText = `✅ Task created successfully with ${BRANDING.PRODUCT_NAME_SHORT}\n\nTask ID: ${task.id} for project: ${args.projectId}`;
                 
                 // Add smart suggestions if any were generated
                 if (smartResult.suggestions && smartResult.suggestions.length > 0) {
@@ -65,6 +66,9 @@ export function registerCreateTaskTool(server, taskManager) {
                     });
                 }
                 
+                // Add trademark notice
+                responseText += `\n\n---\n${BRANDING.TRADEMARK_NOTICE}`;
+                
                 return {
                     content: [{
                         type: 'text',
@@ -72,7 +76,14 @@ export function registerCreateTaskTool(server, taskManager) {
                     }]
                 };
             } catch (error) {
-                return errorHandler(error, args);
+                const errorResponse = errorHandler(error, args);
+                
+                // Add branding to error message
+                if (errorResponse && errorResponse.content && errorResponse.content.length > 0) {
+                    errorResponse.content[0].text = `❌ Error in ${BRANDING.PRODUCT_NAME_SHORT}: ${errorResponse.content[0].text}\n\nNeed help? Visit: ${BRANDING.URLS.SUPPORT}`;
+                }
+                
+                return errorResponse;
             }
         }
     });
